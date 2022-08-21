@@ -1,10 +1,15 @@
-## The MediaWiki Package [![Build Status](https://travis-ci.org/joomla-framework/mediawiki-api.png?branch=master)](https://travis-ci.org/joomla-framework/mediawiki-api)
+# The Archive Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/mediawiki-api/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/mediawiki-api)
 
-### Using the MediaWiki Package
+[![Latest Stable Version](https://poser.pugx.org/joomla/mediawiki/v/stable)](https://packagist.org/packages/joomla/mediawiki)
+[![Total Downloads](https://poser.pugx.org/joomla/mediawiki/downloads)](https://packagist.org/packages/joomla/mediawiki)
+[![Latest Unstable Version](https://poser.pugx.org/joomla/mediawiki/v/unstable)](https://packagist.org/packages/joomla/mediawiki)
+[![License](https://poser.pugx.org/joomla/mediawiki/license)](https://packagist.org/packages/joomla/mediawiki)
+
+## Using the MediaWiki Package
 
 The MediaWiki package is designed to be a straightforward interface for working with MediaWiki.
 
-#### More Information
+### More Information
 
 The following resources contain more information:
 * [Joomla! API Reference](http://api.joomla.org)
