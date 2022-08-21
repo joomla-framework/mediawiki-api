@@ -6,6 +6,9 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Joomla\Http\Response;
+use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Sites;
 
@@ -14,7 +17,7 @@ use Joomla\Mediawiki\Sites;
  *
  * @since  1.0
  */
-class SitesTest extends \PHPUnit_Framework_TestCase
+class SitesTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -23,7 +26,7 @@ class SitesTest extends \PHPUnit_Framework_TestCase
 	protected $options;
 
 	/**
-	 * @var    \PHPUnit_Framework_MockObject_MockObject  Mock client object.
+	 * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
 	 * @since  1.0
 	 */
 	protected $client;
@@ -62,15 +65,15 @@ class SitesTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('\\Joomla\\Http\\Response');
+		$this->client = $this->createMock(Http::class);
+		$this->response = $this->createMock(Response::class);
 
 		error_reporting($errorLevel);
 

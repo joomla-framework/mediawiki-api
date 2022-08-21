@@ -8,6 +8,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Http;
 use Joomla\Uri\Uri;
@@ -18,7 +19,7 @@ use Joomla\Http\Transport\Stream;
  *
  * @since  1.0
  */
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -60,14 +61,14 @@ class HttpTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->transport = $this->getMock('Joomla\\Http\\Transport\\Stream', array('request'), array($this->options), 'CustomTransport', false);
+		$this->transport = $this->createMock(Stream::class);
 
 		error_reporting($errorLevel);
 
@@ -109,11 +110,11 @@ class HttpTest extends \PHPUnit_Framework_TestCase
 
 		$this->transport->expects($this->once())
 			->method('request')
-			->with('POST', $uri, array())
+			->with('POST', $uri, [])
 			->will($this->returnValue('requestResponse'));
 
 		$this->assertThat(
-			$this->object->post('https://example.com/gettest', array()),
+			$this->object->post('https://example.com/gettest', []),
 			$this->equalTo('requestResponse')
 		);
 	}

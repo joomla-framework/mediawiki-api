@@ -8,6 +8,8 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
 
 require_once __DIR__ . '/stubs/AbstractMediawikiObjectMock.php';
@@ -17,7 +19,7 @@ require_once __DIR__ . '/stubs/AbstractMediawikiObjectMock.php';
  *
  * @since       1.0
  */
-class AbstractMediawikiObjectTest extends \PHPUnit_Framework_TestCase
+class AbstractMediawikiObjectTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -59,14 +61,14 @@ class AbstractMediawikiObjectTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->client = $this->createMock(Http::class);
 
 		error_reporting($errorLevel);
 
@@ -83,7 +85,7 @@ class AbstractMediawikiObjectTest extends \PHPUnit_Framework_TestCase
 	public function testBuildParameter()
 	{
 		$this->assertThat(
-			$this->object->buildParameter(array('Joomla', 'Joomla', 'Joomla')),
+			$this->object->buildParameter(['Joomla', 'Joomla', 'Joomla']),
 			$this->equalTo('Joomla|Joomla|Joomla')
 		);
 	}

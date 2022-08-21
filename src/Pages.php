@@ -37,14 +37,14 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=edit';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'title'        => $title,
 			'token'        => $token,
 			'section'      => $section,
 			'sectiontitle' => $section,
 			'text'         => $text,
 			'summary'      => $summary,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -73,13 +73,13 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=delete';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'title'     => $title,
 			'token'     => $token,
 			'reason'    => $reason,
 			'watchlist' => $watchlist,
 			'oldimage'  => $oldimage,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -108,13 +108,13 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=delete';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'pageid'    => $pageid,
 			'token'     => $token,
 			'reason'    => $reason,
 			'watchlist' => $watchlist,
 			'oldimage'  => $oldimage,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -143,13 +143,13 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=undelete';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'title'     => $title,
 			'token'     => $token,
 			'reason'    => $reason,
 			'timestamp' => $timestamp,
 			'watchlist' => $watchlist,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -184,7 +184,7 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=move';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'from'           => $from,
 			'to'             => $reason,
 			'token'          => $token,
@@ -194,7 +194,7 @@ class Pages extends AbstractMediawikiObject
 			'noredirect'     => $noredirect,
 			'watchlist'      => $watchlist,
 			'ignorewarnings' => $ignorewarnings,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -229,7 +229,7 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=move';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'fromid'         => $fromid,
 			'to'             => $reason,
 			'token'          => $token,
@@ -239,7 +239,7 @@ class Pages extends AbstractMediawikiObject
 			'noredirect'     => $noredirect,
 			'watchlist'      => $watchlist,
 			'ignorewarnings' => $ignorewarnings,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -269,14 +269,14 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=rollback';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'title'     => $title,
 			'token'     => $token,
 			'user'      => $user,
 			'expiry'    => $summary,
 			'markbot'   => $markbot,
 			'watchlist' => $watchlist,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -307,7 +307,7 @@ class Pages extends AbstractMediawikiObject
 		$path = '?action=protect';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'title'       => $title,
 			'token'       => $token,
 			'protections' => $protections,
@@ -315,7 +315,7 @@ class Pages extends AbstractMediawikiObject
 			'reason'      => $reason,
 			'cascade'     => $cascade,
 			'watchlist'   => $watchlist,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);

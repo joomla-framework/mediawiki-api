@@ -26,7 +26,7 @@ class Http extends BaseHttp
 	 *
 	 * @since   12.3
 	 */
-	public function __construct($options = array(), TransportInterface $transport = null)
+	public function __construct($options = [], TransportInterface $transport = null)
 	{
 		parent::__construct($options, $transport);
 

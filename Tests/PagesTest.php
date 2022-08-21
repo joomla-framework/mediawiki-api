@@ -6,6 +6,9 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Joomla\Http\Response;
+use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Pages;
 
@@ -14,7 +17,7 @@ use Joomla\Mediawiki\Pages;
  *
  * @since  1.0
  */
-class PagesTest extends \PHPUnit_Framework_TestCase
+class PagesTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -23,7 +26,7 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 	protected $options;
 
 	/**
-	 * @var    \PHPUnit_Framework_MockObject_MockObject  Mock client object.
+	 * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
 	 * @since  1.0
 	 */
 	protected $client;
@@ -62,131 +65,19 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('\\Joomla\\Http\\Response');
+		$this->client = $this->createMock(Http::class);
+		$this->response = $this->createMock(Response::class);
 
 		error_reporting($errorLevel);
 
 		$this->object = new Pages($this->options, $this->client);
-	}
-
-	/**
-	 * Tests the editPage method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testEditPage()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the deletePageByName method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testDeletePageByName()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the deletePageByID method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testDeletePageByID()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the undeletePage method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testUndeletePage()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the movePageByName method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testMovePageByName()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the movePageByID method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testMovePageByID()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the rollback method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testRollback()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
-	}
-
-	/**
-	 * Tests the changeProtection method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testChangeProtection()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
 	}
 
 	/**
@@ -207,7 +98,7 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getPageInfo(array('Main Page')),
+			$this->object->getPageInfo(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -230,7 +121,7 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getPageProperties(array('Main Page')),
+			$this->object->getPageProperties(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -253,7 +144,7 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getPageProperties(array('Main Page')),
+			$this->object->getPageProperties(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -302,19 +193,5 @@ class PagesTest extends \PHPUnit_Framework_TestCase
 			$this->object->getIWBackLinks('Joomla'),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
-	}
-
-	/**
-	 * Tests the getToken method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testGetToken()
-	{
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-        );
 	}
 }

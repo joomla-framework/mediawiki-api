@@ -8,6 +8,10 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Joomla\Http\Response;
+use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Links;
 
@@ -16,7 +20,7 @@ use Joomla\Mediawiki\Links;
  *
  * @since  1.0
  */
-class LinksTest extends \PHPUnit_Framework_TestCase
+class LinksTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -25,7 +29,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 	protected $options;
 
 	/**
-	 * @var    \PHPUnit_Framework_MockObject_MockObject  Mock client object.
+	 * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
 	 * @since  1.0
 	 */
 	protected $client;
@@ -64,15 +68,15 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('\\Joomla\\Http\\Response');
+		$this->client = $this->createMock(Http::class);
+		$this->response = $this->createMock(Response::class);
 
 		error_reporting($errorLevel);
 
@@ -97,7 +101,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getLinks(array('Main Page')),
+			$this->object->getLinks(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -120,7 +124,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getLinksUsed(array('Main Page')),
+			$this->object->getLinksUsed(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -143,7 +147,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getIWLinks(array('Main Page')),
+			$this->object->getIWLinks(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -166,7 +170,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getLangLinks(array('Main Page')),
+			$this->object->getLangLinks(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -189,7 +193,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getExtLinks(array('Main Page')),
+			$this->object->getExtLinks(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -212,7 +216,7 @@ class LinksTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->enumerateLinks(array('Main Page')),
+			$this->object->enumerateLinks(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}

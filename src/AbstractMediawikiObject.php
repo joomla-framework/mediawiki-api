@@ -41,8 +41,8 @@ abstract class AbstractMediawikiObject
 	 */
 	public function __construct(Registry $options = null, Http $client = null)
 	{
-		$this->options = isset($options) ? $options : new Registry;
-		$this->client  = isset($client) ? $client : new Http($this->options);
+		$this->options = $options ?? new Registry;
+		$this->client  = $client ?? new Http($this->options);
 	}
 
 	/**

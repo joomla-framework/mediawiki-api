@@ -264,7 +264,7 @@ class Users extends AbstractMediawikiObject
 		$path = '?action=unblock';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'user'         => $user,
 			'token'        => $token,
 			'expiry'       => $expiry,
@@ -277,7 +277,7 @@ class Users extends AbstractMediawikiObject
 			'allowusetalk' => $allowusertalk,
 			'reblock'      => $reblock,
 			'watchuser'    => $watchuser,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -304,11 +304,11 @@ class Users extends AbstractMediawikiObject
 		$path = '?action=unblock';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'user'   => $user,
 			'token'  => $token,
 			'reason' => $reason,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -336,11 +336,11 @@ class Users extends AbstractMediawikiObject
 
 		// Build the request data.
 		// TODO: $data doesn't seem to be used!
-		$data = array(
+		$data = [
 			'id'     => $id,
 			'token'  => $token,
 			'reason' => $reason,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->get($this->fetchUrl($path));
@@ -369,13 +369,13 @@ class Users extends AbstractMediawikiObject
 		$path = '?action=userrights';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'username' => $username,
 			'token'    => $token,
 			'add'      => $add,
 			'remove'   => $remove,
 			'reason'   => $reason,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);
@@ -404,13 +404,13 @@ class Users extends AbstractMediawikiObject
 		$path = '?action=emailuser';
 
 		// Build the request data.
-		$data = array(
+		$data = [
 			'target'  => $target,
 			'token'   => $token,
 			'subject' => $subject,
 			'text'    => $text,
 			'ccme'    => $ccme,
-		);
+		];
 
 		// Send the request.
 		$response = $this->client->post($this->fetchUrl($path), $data);

@@ -6,6 +6,14 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Joomla\Mediawiki\Http;
+use Joomla\Mediawiki\Pages;
+use Joomla\Mediawiki\Users;
+use Joomla\Mediawiki\Links;
+use Joomla\Mediawiki\Categories;
+use Joomla\Mediawiki\Images;
+use Joomla\Mediawiki\Search;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Mediawiki;
 
@@ -14,7 +22,7 @@ use Joomla\Mediawiki\Mediawiki;
  *
  * @since  1.0
  */
-class MediawikiTest extends \PHPUnit_Framework_TestCase
+class MediawikiTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -23,7 +31,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	protected $options;
 
 	/**
-	 * @var    \PHPUnit_Framework_MockObject_MockObject  Mock client object.
+	 * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
 	 * @since  1.0
 	 */
 	protected $client;
@@ -56,14 +64,15 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
+		$this->client = $this->createMock(Http::class);
+		// Add methods ['get', 'post', 'delete', 'patch', 'put']
 
 		error_reporting($errorLevel);
 
@@ -81,7 +90,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->pages,
-			$this->isInstanceOf('Joomla\Mediawiki\Pages')
+			$this->isInstanceOf(Pages::class)
 		);
 	}
 
@@ -96,7 +105,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->users,
-			$this->isInstanceOf('Joomla\Mediawiki\Users')
+			$this->isInstanceOf(Users::class)
 		);
 	}
 
@@ -111,7 +120,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->links,
-			$this->isInstanceOf('Joomla\Mediawiki\Links')
+			$this->isInstanceOf(Links::class)
 		);
 	}
 
@@ -126,7 +135,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->categories,
-			$this->isInstanceOf('Joomla\Mediawiki\Categories')
+			$this->isInstanceOf(Categories::class)
 		);
 	}
 
@@ -141,7 +150,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->images,
-			$this->isInstanceOf('Joomla\Mediawiki\Images')
+			$this->isInstanceOf(Images::class)
 		);
 	}
 
@@ -156,7 +165,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->object->search,
-			$this->isInstanceOf('Joomla\Mediawiki\Search')
+			$this->isInstanceOf(Search::class)
 		);
 	}
 
@@ -189,7 +198,7 @@ class MediawikiTest extends \PHPUnit_Framework_TestCase
 		$this->options->set('api.url', 'https://example.com/gettest');
 
 		$this->assertThat(
-			$this->object->getOption('api.url', 'https://example.com/gettest'),
+			$this->object->getOption('api.url'),
 			$this->equalTo('https://example.com/gettest')
 		);
 	}

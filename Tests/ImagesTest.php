@@ -8,6 +8,10 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Joomla\Http\Response;
+use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
 use Joomla\Mediawiki\Images;
 
@@ -16,7 +20,7 @@ use Joomla\Mediawiki\Images;
  *
  * @since  1.0
  */
-class ImagesTest extends \PHPUnit_Framework_TestCase
+class ImagesTest extends TestCase
 {
 	/**
 	 * @var    Registry  Options for the Mediawiki object.
@@ -25,7 +29,7 @@ class ImagesTest extends \PHPUnit_Framework_TestCase
 	protected $options;
 
 	/**
-	 * @var    \PHPUnit_Framework_MockObject_MockObject  Mock client object.
+	 * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
 	 * @since  1.0
 	 */
 	protected $client;
@@ -64,15 +68,15 @@ class ImagesTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @since  1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->options = new Registry;
 
 		$errorLevel = error_reporting();
 		error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->getMock('\\Joomla\\Mediawiki\\Http', array('get', 'post', 'delete', 'patch', 'put'));
-		$this->response = $this->getMock('\\Joomla\\Http\\Response');
+		$this->client = $this->createMock(Http::class);
+		$this->response = $this->createMock(Response::class);
 
 		error_reporting($errorLevel);
 
@@ -97,7 +101,7 @@ class ImagesTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getImages(array('Main Page')),
+			$this->object->getImages(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}
@@ -120,7 +124,7 @@ class ImagesTest extends \PHPUnit_Framework_TestCase
 			->will($this->returnValue($this->response));
 
 		$this->assertThat(
-			$this->object->getImagesUsed(array('Main Page')),
+			$this->object->getImagesUsed(['Main Page']),
 			$this->equalTo(simplexml_load_string($this->sampleString))
 		);
 	}

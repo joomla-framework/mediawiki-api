@@ -13,13 +13,13 @@ use Joomla\Registry\Registry;
 /**
  * Class for interacting with a MediaWiki server instance.
  *
- * @property-read  Joomla\Mediawiki\Sites          $sites          MediaWiki API object for sites.
- * @property-read  Joomla\Mediawiki\Pages          $pages          MediaWiki API object for pages.
- * @property-read  Joomla\Mediawiki\Users          $users          MediaWiki API object for users.
- * @property-read  Joomla\Mediawiki\Links          $links          MediaWiki API object for links.
- * @property-read  Joomla\Mediawiki\Categories     $categories     MediaWiki API object for categories.
- * @property-read  Joomla\Mediawiki\Images         $images         MediaWiki API object for images.
- * @property-read  Joomla\Mediawiki\Search         $search         MediaWiki API object for search.
+ * @property-read  \Joomla\Mediawiki\Sites          $sites          MediaWiki API object for sites.
+ * @property-read  \Joomla\Mediawiki\Pages          $pages          MediaWiki API object for pages.
+ * @property-read  \Joomla\Mediawiki\Users          $users          MediaWiki API object for users.
+ * @property-read  \Joomla\Mediawiki\Links          $links          MediaWiki API object for links.
+ * @property-read  \Joomla\Mediawiki\Categories     $categories     MediaWiki API object for categories.
+ * @property-read  \Joomla\Mediawiki\Images         $images         MediaWiki API object for images.
+ * @property-read  \Joomla\Mediawiki\Search         $search         MediaWiki API object for search.
  *
  * @since  1.0
  */
@@ -89,8 +89,8 @@ class Mediawiki
 	 */
 	public function __construct(Registry $options = null, Http $client = null)
 	{
-		$this->options = isset($options) ? $options : new Registry;
-		$this->client  = isset($client) ? $client : new Http($this->options);
+		$this->options = $options ?? new Registry;
+		$this->client  = $client ?? new Http($this->options);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Mediawiki
 	{
 		$name       = strtolower($name);
 		$class      = 'Joomla\\Mediawiki\\' . ucfirst($name);
-		$accessible = array(
+		$accessible = [
 			'categories',
 			'images',
 			'links',
@@ -115,7 +115,7 @@ class Mediawiki
 			'search',
 			'sites',
 			'users',
-		);
+		];
 
 		if (class_exists($class) && \in_array($name, $accessible))
 		{
