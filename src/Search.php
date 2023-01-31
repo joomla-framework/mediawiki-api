@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Joomla Framework MediaWiki Package
  *
@@ -86,7 +87,7 @@ class Search extends AbstractMediawikiObject
      * Method to search the wiki using opensearch protocol.
      *
      * @param   string   $search     Search string.
-     * @param   integer  $limit	     Maximum amount of results to return.
+     * @param   integer  $limit      Maximum amount of results to return.
      * @param   array    $namespace  Namespaces to search.
      * @param   string   $suggest    Do nothing if $wgEnableOpenSearchSuggest is false.
      * @param   string   $format     Output format.

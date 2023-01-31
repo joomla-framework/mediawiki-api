@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Joomla Framework MediaWiki Package
  *
@@ -151,7 +152,7 @@ class Users extends AbstractMediawikiObject
      * @param   array    $ucprop        Include additional pieces of information.
      * @param   array    $ucshow        Show only items that meet this criteria.
      * @param   string   $uctag         Only list revisions tagged with this tag.
-     * @param   string   $uctoponly	    Only list changes which are the latest revision
+     * @param   string   $uctoponly     Only list changes which are the latest revision
      *
      * @return  object
      *
