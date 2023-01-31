@@ -18,28 +18,26 @@ use Joomla\Http\TransportInterface;
  */
 class Http extends BaseHttp
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param   array               $options    Client options object.
-	 * @param   TransportInterface  $transport  The HTTP transport object.
-	 *
-	 * @since   12.3
-	 */
-	public function __construct($options = [], TransportInterface $transport = null)
-	{
-		parent::__construct($options, $transport);
+    /**
+     * Constructor.
+     *
+     * @param   array               $options    Client options object.
+     * @param   TransportInterface  $transport  The HTTP transport object.
+     *
+     * @since   12.3
+     */
+    public function __construct($options = [], TransportInterface $transport = null)
+    {
+        parent::__construct($options, $transport);
 
-		// Make sure the user agent string is defined.
-		if (!isset($this->options['userAgent']))
-		{
-			$this->options['userAgent'] = 'JMediawiki/1.0';
-		}
+        // Make sure the user agent string is defined.
+        if (!isset($this->options['userAgent'])) {
+            $this->options['userAgent'] = 'JMediawiki/1.0';
+        }
 
-		// Set the default timeout to 120 seconds.
-		if (!isset($this->options['timeout']))
-		{
-			$this->options['timeout'] = 120;
-		}
-	}
+        // Set the default timeout to 120 seconds.
+        if (!isset($this->options['timeout'])) {
+            $this->options['timeout'] = 120;
+        }
+    }
 }

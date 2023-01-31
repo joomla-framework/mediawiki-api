@@ -25,139 +25,137 @@ use Joomla\Registry\Registry;
  */
 class Mediawiki
 {
-	/**
-	 * @var    Registry  Options for the MediaWiki object.
-	 * @since  1.0
-	 */
-	protected $options;
+    /**
+     * @var    Registry  Options for the MediaWiki object.
+     * @since  1.0
+     */
+    protected $options;
 
-	/**
-	 * @var    Http  The HTTP client object to use in sending HTTP requests.
-	 * @since  1.0
-	 */
-	protected $client;
+    /**
+     * @var    Http  The HTTP client object to use in sending HTTP requests.
+     * @since  1.0
+     */
+    protected $client;
 
-	/**
-	 * @var    Sites  MediaWiki API object for Site.
-	 * @since  1.0
-	 */
-	protected $sites;
+    /**
+     * @var    Sites  MediaWiki API object for Site.
+     * @since  1.0
+     */
+    protected $sites;
 
-	/**
-	 * @var    Pages  MediaWiki API object for pages.
-	 * @since  1.0
-	 */
-	protected $pages;
+    /**
+     * @var    Pages  MediaWiki API object for pages.
+     * @since  1.0
+     */
+    protected $pages;
 
-	/**
-	 * @var    Users  MediaWiki API object for users.
-	 * @since  1.0
-	 */
-	protected $users;
+    /**
+     * @var    Users  MediaWiki API object for users.
+     * @since  1.0
+     */
+    protected $users;
 
-	/**
-	 * @var    Links  MediaWiki API object for links.
-	 * @since  1.0
-	 */
-	protected $links;
+    /**
+     * @var    Links  MediaWiki API object for links.
+     * @since  1.0
+     */
+    protected $links;
 
-	/**
-	 * @var    Categories  MediaWiki API object for categories.
-	 * @since  1.0
-	 */
-	protected $categories;
+    /**
+     * @var    Categories  MediaWiki API object for categories.
+     * @since  1.0
+     */
+    protected $categories;
 
-	/**
-	 * @var    Images  MediaWiki API object for images.
-	 * @since  1.0
-	 */
-	protected $images;
+    /**
+     * @var    Images  MediaWiki API object for images.
+     * @since  1.0
+     */
+    protected $images;
 
-	/**
-	 * @var    Search  MediaWiki API object for search.
-	 * @since  1.0
-	 */
-	protected $search;
+    /**
+     * @var    Search  MediaWiki API object for search.
+     * @since  1.0
+     */
+    protected $search;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   array  $options  MediaWiki options array.
-	 * @param   Http   $client   The HTTP client object.
-	 *
-	 * @since   1.0
-	 */
-	public function __construct(Registry $options = null, Http $client = null)
-	{
-		$this->options = $options ?? new Registry;
-		$this->client  = $client ?? new Http($this->options);
-	}
+    /**
+     * Constructor.
+     *
+     * @param   array  $options  MediaWiki options array.
+     * @param   Http   $client   The HTTP client object.
+     *
+     * @since   1.0
+     */
+    public function __construct(Registry $options = null, Http $client = null)
+    {
+        $this->options = $options ?? new Registry();
+        $this->client  = $client ?? new Http($this->options);
+    }
 
-	/**
-	 * Magic method to lazily create API objects
-	 *
-	 * @param   string  $name  Name of property to retrieve
-	 *
-	 * @return  AbstractMediawikiObject  MediaWiki API object (users, reviews, etc).
-	 *
-	 * @since   1.0
-	 * @throws  \InvalidArgumentException
-	 */
-	public function __get($name)
-	{
-		$name       = strtolower($name);
-		$class      = 'Joomla\\Mediawiki\\' . ucfirst($name);
-		$accessible = [
-			'categories',
-			'images',
-			'links',
-			'pages',
-			'search',
-			'sites',
-			'users',
-		];
+    /**
+     * Magic method to lazily create API objects
+     *
+     * @param   string  $name  Name of property to retrieve
+     *
+     * @return  AbstractMediawikiObject  MediaWiki API object (users, reviews, etc).
+     *
+     * @since   1.0
+     * @throws  \InvalidArgumentException
+     */
+    public function __get($name)
+    {
+        $name       = strtolower($name);
+        $class      = 'Joomla\\Mediawiki\\' . ucfirst($name);
+        $accessible = [
+            'categories',
+            'images',
+            'links',
+            'pages',
+            'search',
+            'sites',
+            'users',
+        ];
 
-		if (class_exists($class) && \in_array($name, $accessible))
-		{
-			if (!isset($this->$name))
-			{
-				$this->$name = new $class($this->options, $this->client);
-			}
+        if (class_exists($class) && \in_array($name, $accessible)) {
+            if (!isset($this->$name)) {
+                $this->$name = new $class($this->options, $this->client);
+            }
 
-			return $this->$name;
-		}
+            return $this->$name;
+        }
 
-		throw new \InvalidArgumentException(sprintf('Property %s is not accessible.', $name));
-	}
+        throw new \InvalidArgumentException(sprintf('Property %s is not accessible.', $name));
+    }
 
-	/**
-	 * Get an option from the Mediawiki instance.
-	 *
-	 * @param   string  $key  The name of the option to get.
-	 *
-	 * @return  mixed  The option value.
-	 *
-	 * @since   1.0
-	 */
-	public function getOption($key)
-	{
-		return $this->options->get($key);
-	}
+    /**
+     * Get an option from the Mediawiki instance.
+     *
+     * @param   string  $key  The name of the option to get.
+     *
+     * @return  mixed  The option value.
+     *
+     * @since   1.0
+     */
+    public function getOption($key)
+    {
+        return $this->options->get($key);
+    }
 
-	/**
-	 * Set an option for the Mediawiki instance.
-	 *
-	 * @param   string  $key    The name of the option to set.
-	 * @param   mixed   $value  The option value to set.
-	 *
-	 * @return  Mediawiki  This object for method chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setOption($key, $value)
-	{
-		$this->options->set($key, $value);
+    /**
+     * Set an option for the Mediawiki instance.
+     *
+     * @param   string  $key    The name of the option to set.
+     * @param   mixed   $value  The option value to set.
+     *
+     * @return  Mediawiki  This object for method chaining.
+     *
+     * @since   1.0
+     */
+    public function setOption($key, $value)
+    {
+        $this->options->set($key, $value);
 
-		return $this;
-	}
+        return $this;
+    }
 }

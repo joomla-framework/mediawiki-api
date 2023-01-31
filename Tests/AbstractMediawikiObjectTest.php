@@ -21,73 +21,72 @@ require_once __DIR__ . '/stubs/AbstractMediawikiObjectMock.php';
  */
 class AbstractMediawikiObjectTest extends TestCase
 {
-	/**
-	 * @var    Registry  Options for the Mediawiki object.
-	 * @since  1.0
-	 */
-	protected $options;
+    /**
+     * @var    Registry  Options for the Mediawiki object.
+     * @since  1.0
+     */
+    protected $options;
 
-	/**
-	 * @var    \Joomla\Mediawiki\Http  Mock client object.
-	 * @since  1.0
-	 */
-	protected $client;
+    /**
+     * @var    \Joomla\Mediawiki\Http  Mock client object.
+     * @since  1.0
+     */
+    protected $client;
 
-	/**
-	 * @var    \Joomla\Mediawiki\Tests\AbstractMediawikiObjectMock  Object under test.
-	 * @since  1.0
-	 */
-	protected $object;
+    /**
+     * @var    \Joomla\Mediawiki\Tests\AbstractMediawikiObjectMock  Object under test.
+     * @since  1.0
+     */
+    protected $object;
 
-	/**
-	 * @var    string  Sample xml string.
-	 * @since  1.0
-	 */
-	protected $sampleString = '<a><b></b><c></c></a>';
+    /**
+     * @var    string  Sample xml string.
+     * @since  1.0
+     */
+    protected $sampleString = '<a><b></b><c></c></a>';
 
-	/**
-	 * @var    string  Sample xml error message.
-	 * @since  1.0
-	 */
-	protected $errorString = '<message>Generic Error</message>';
+    /**
+     * @var    string  Sample xml error message.
+     * @since  1.0
+     */
+    protected $errorString = '<message>Generic Error</message>';
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 *
-	 * @access protected
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	protected function setUp(): void
-	{
-		$this->options = new Registry;
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @access protected
+     *
+     * @return void
+     *
+     * @since  1.0
+     */
+    protected function setUp(): void
+    {
+        $this->options = new Registry();
 
-		$errorLevel = error_reporting();
-		error_reporting($errorLevel & ~E_DEPRECATED);
+        $errorLevel = error_reporting();
+        error_reporting($errorLevel & ~E_DEPRECATED);
 
-		$this->client = $this->createMock(Http::class);
+        $this->client = $this->createMock(Http::class);
 
-		error_reporting($errorLevel);
+        error_reporting($errorLevel);
 
-		$this->object = new AbstractMediawikiObjectMock($this->options, $this->client);
-	}
+        $this->object = new AbstractMediawikiObjectMock($this->options, $this->client);
+    }
 
-	/**
-	 * Tests the buildParameter method
-	 *
-	 * @return void
-	 *
-	 * @since  1.0
-	 */
-	public function testBuildParameter()
-	{
-		$this->assertThat(
-			$this->object->buildParameter(['Joomla', 'Joomla', 'Joomla']),
-			$this->equalTo('Joomla|Joomla|Joomla')
-		);
-	}
-
+    /**
+     * Tests the buildParameter method
+     *
+     * @return void
+     *
+     * @since  1.0
+     */
+    public function testBuildParameter()
+    {
+        $this->assertThat(
+            $this->object->buildParameter(['Joomla', 'Joomla', 'Joomla']),
+            $this->equalTo('Joomla|Joomla|Joomla')
+        );
+    }
 }
