@@ -18,7 +18,7 @@
     "require-dev": {
         "ext-simplexml": "*",
         "joomla/test": "3.0.x-dev",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^9.5.28",
         "rector/rector": "^0.14.0",
         "squizlabs/php_codesniffer": "~3.7.1"
     },
