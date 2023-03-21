@@ -20,10 +20,10 @@ class Links extends AbstractMediawikiObject
      * Method to return all links from the given page(s).
      *
      * @param   array   $titles       Page titles to retrieve links.
-     * @param   array   $plnamespace  Namespaces to get links.
+     * @param   ?array  $plnamespace  Namespaces to get links.
      * @param   string  $pllimit      Number of links to return.
      * @param   string  $plcontinue   Continue when more results are available.
-     * @param   array   $pltitles     List links to these titles.
+     * @param   ?array  $pltitles     List links to these titles.
      * @param   string  $pldir        Direction of listing.
      *
      * @return  object
@@ -244,7 +244,7 @@ class Links extends AbstractMediawikiObject
      * @param   string   $alto         The page title to stop enumerating at.
      * @param   string   $alprefix     Search for all page titles that begin with this value.
      * @param   string   $alunique     Only show unique links.
-     * @param   array    $alprop       What pieces of information to include.
+     * @param   ?array   $alprop       What pieces of information to include.
      * @param   string   $alnamespace  The namespace to enumerate.
      * @param   integer  $allimit      Number of links to return.
      *

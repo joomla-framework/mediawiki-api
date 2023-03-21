@@ -89,8 +89,8 @@ class Users extends AbstractMediawikiObject
     /**
      * Method to get user information.
      *
-     * @param   array  $ususers  A list of users to obtain the same information for.
-     * @param   array  $usprop   What pieces of information to include.
+     * @param   array   $ususers  A list of users to obtain the same information for.
+     * @param   ?array  $usprop   What pieces of information to include.
      *
      * @return  object
      *
@@ -117,7 +117,7 @@ class Users extends AbstractMediawikiObject
     /**
      * Method to get current user information.
      *
-     * @param   array  $uiprop  What pieces of information to include.
+     * @param   ?array  $uiprop  What pieces of information to include.
      *
      * @return  object
      *
@@ -148,9 +148,9 @@ class Users extends AbstractMediawikiObject
      * @param   string   $ucend         The end timestamp to return to.
      * @param   boolean  $uccontinue    When more results are available, use this to continue.
      * @param   string   $ucdir         In which direction to enumerate.
-     * @param   array    $ucnamespace   Only list contributions in these namespaces.
-     * @param   array    $ucprop        Include additional pieces of information.
-     * @param   array    $ucshow        Show only items that meet this criteria.
+     * @param   ?array   $ucnamespace   Only list contributions in these namespaces.
+     * @param   ?array   $ucprop        Include additional pieces of information.
+     * @param   ?array   $ucshow        Show only items that meet this criteria.
      * @param   string   $uctag         Only list revisions tagged with this tag.
      * @param   string   $uctoponly     Only list changes which are the latest revision
      *
@@ -428,7 +428,7 @@ class Users extends AbstractMediawikiObject
      * @param   string  $user     The User to get token.
      * @param   string  $intoken  The type of token.
      *
-     * @return  object
+     * @return  string
      *
      * @since   1.0
      */

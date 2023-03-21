@@ -85,15 +85,15 @@ class Images extends AbstractMediawikiObject
     /**
      * Method to get all image information and upload history.
      *
-     * @param   array    $liprop             What image information to get.
-     * @param   integer  $lilimit            How many image revisions to return.
-     * @param   string   $listart            Timestamp to start listing from.
-     * @param   string   $liend              Timestamp to stop listing at.
-     * @param   integer  $liurlwidth         URL to an image scaled to this width will be returned..
-     * @param   integer  $liurlheight        URL to an image scaled to this height will be returned.
-     * @param   string   $limetadataversion  Version of metadata to use.
-     * @param   string   $liurlparam         A handler specific parameter string.
-     * @param   boolean  $licontinue         When more results are available, use this to continue.
+     * @param   ?array    $liprop             What image information to get.
+     * @param   integer   $lilimit            How many image revisions to return.
+     * @param   string    $listart            Timestamp to start listing from.
+     * @param   string    $liend              Timestamp to stop listing at.
+     * @param   integer   $liurlwidth         URL to an image scaled to this width will be returned..
+     * @param   integer   $liurlheight        URL to an image scaled to this height will be returned.
+     * @param   string    $limetadataversion  Version of metadata to use.
+     * @param   string    $liurlparam         A handler specific parameter string.
+     * @param   boolean   $licontinue         When more results are available, use this to continue.
      *
      * @return  object
      *
@@ -167,7 +167,7 @@ class Images extends AbstractMediawikiObject
      * @param   string   $aidir         The direction in which to list.
      * @param   string   $aisha1        SHA1 hash of image.
      * @param   string   $aisha1base36  SHA1 hash of image in base 36.
-     * @param   array    $aiprop        What image information to get.
+     * @param   ?array   $aiprop        What image information to get.
      * @param   string   $aimime        What MIME type to search for.
      *
      * @return  object
