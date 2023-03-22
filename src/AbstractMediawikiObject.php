@@ -35,15 +35,15 @@ abstract class AbstractMediawikiObject
     /**
      * Constructor.
      *
-     * @param   Registry  $options  Mediawiki options object.
-     * @param   Http      $client   The HTTP client object.
+     * @param   ?Registry  $options  Mediawiki options object.
+     * @param   ?Http      $client   The HTTP client object.
      *
      * @since   1.0
      */
     public function __construct(Registry $options = null, Http $client = null)
     {
         $this->options = $options ?? new Registry();
-        $this->client  = $client ?? new Http($this->options);
+        $this->client  = $client ?? new Http($this->options->toArray());
     }
 
     /**

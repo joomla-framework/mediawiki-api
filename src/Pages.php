@@ -340,8 +340,8 @@ class Pages extends AbstractMediawikiObject
      * Method to get basic page information.
      *
      * @param   array    $titles      Page titles to retrieve info.
-     * @param   array    $inprop      Which additional properties to get.
-     * @param   array    $intoken     Request a token to perform a data-modifying action on a page
+     * @param   ?array   $inprop      Which additional properties to get.
+     * @param   ?array   $intoken     Request a token to perform a data-modifying action on a page
      * @param   boolean  $incontinue  When more results are available, use this to continue.
      *
      * @return  object
@@ -411,7 +411,7 @@ class Pages extends AbstractMediawikiObject
      * Method to get a list of revisions.
      *
      * @param   array    $titles   Page titles to retrieve revisions.
-     * @param   array    $rvprop   Which properties to get for each revision.
+     * @param   ?array   $rvprop   Which properties to get for each revision.
      * @param   boolean  $rvparse  Parse revision content.
      * @param   int      $rvlimit  Limit how many revisions will be returned.
      *
@@ -449,7 +449,7 @@ class Pages extends AbstractMediawikiObject
      * Method to get all page templates from the given page.
      *
      * @param   array    $titles       Page titles to retrieve templates.
-     * @param   array    $tlnamespace  Show templates in this namespace(s) only.
+     * @param   ?array   $tlnamespace  Show templates in this namespace(s) only.
      * @param   integer  $tllimit      How many templates to return.
      * @param   boolean  $tlcontinue   When more results are available, use this to continue.
      * @param   string   $tltemplates  Only list these templates.
@@ -505,7 +505,7 @@ class Pages extends AbstractMediawikiObject
      * @param   string   $bltitle           Title to search.
      * @param   integer  $blpageid          Pageid to search.
      * @param   boolean  $blcontinue        When more results are available, use this to continue.
-     * @param   array    $blnamespace       The namespace to enumerate.
+     * @param   ?array   $blnamespace       The namespace to enumerate.
      * @param   string   $blfilterredirect  How to filter for redirects..
      * @param   integer  $bllimit           How many total pages to return.
      * @param   boolean  $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
@@ -567,7 +567,7 @@ class Pages extends AbstractMediawikiObject
      * @param   string   $iwblprefix    Prefix for the interwiki.
      * @param   boolean  $iwblcontinue  When more results are available, use this to continue.
      * @param   integer  $iwbllimit     How many total pages to return.
-     * @param   array    $iwblprop      Which properties to get.
+     * @param   ?array   $iwblprop      Which properties to get.
      *
      * @return  object
      *
@@ -610,7 +610,7 @@ class Pages extends AbstractMediawikiObject
      * @param   string  $user     The User to get token.
      * @param   string  $intoken  The type of token.
      *
-     * @return  object
+     * @return  string
      *
      * @since   1.0
      */

@@ -19,11 +19,11 @@ class Sites extends AbstractMediawikiObject
     /**
      * Method to get site information.
      *
-     * @param   array    $siprop            The sysinfo properties to get.
+     * @param   ?array   $siprop            The sysinfo properties to get.
      * @param   string   $sifilteriw        Only local or only non local entries to return.
      * @param   boolean  $sishowalldb       List all database servers.
      * @param   boolean  $sinumberingroup   List the number of users in usergroups.
-     * @param   array    $siinlanguagecode  Language code for localized languages.
+     * @param   ?array   $siinlanguagecode  Language code for localized languages.
      *
      * @return  object
      *
@@ -68,7 +68,7 @@ class Sites extends AbstractMediawikiObject
     /**
      * Method to get events from logs.
      *
-     * @param   array    $leprop    List of properties to get.
+     * @param   ?array   $leprop    List of properties to get.
      * @param   string   $letype    Filter log actions to only this type.
      * @param   string   $leaction  Filter log actions to only this type.
      * @param   string   $letitle   Filter entries to those related to a page.
@@ -156,13 +156,13 @@ class Sites extends AbstractMediawikiObject
      * @param   string  $rcstart        Starting timestamp.
      * @param   string  $rcend          Ending timestamp.
      * @param   string  $rcdir          Direction of enumeration.
-     * @param   array   $rcnamespace    Filter changes to only this namespace(s).
+     * @param   ?array  $rcnamespace    Filter changes to only this namespace(s).
      * @param   string  $rcuser         Filter changes by this user.
      * @param   string  $rcexcludeuser  Filter changes to exclude changes by this user.
      * @param   string  $rctag          Filter changes by this tag.
-     * @param   array   $rcprop         Filter log actions to only this type.
-     * @param   array   $rctoken        Which token to obtain for each change.
-     * @param   array   $rcshow         Filter changes by this criteria.
+     * @param   ?array  $rcprop         Filter log actions to only this type.
+     * @param   ?array  $rctoken        Which token to obtain for each change.
+     * @param   ?array  $rcshow         Filter changes by this criteria.
      * @param   string  $rclimit        Changes limit to return.
      * @param   string  $rctype         Filter event by type of changes.
      * @param   string  $rctoponly      Filter changes which are latest revision.
@@ -250,13 +250,13 @@ class Sites extends AbstractMediawikiObject
     /**
      * Method to get protected titles on a site.
      *
-     * @param   array    $ptnamespace  Only list titles in this namespace.
-     * @param   array    $ptlevel      Only list titles with these protection level.
+     * @param   ?array   $ptnamespace  Only list titles in this namespace.
+     * @param   ?array   $ptlevel      Only list titles with these protection level.
      * @param   integer  $ptlimit      Limit of pages to return.
      * @param   string   $ptdir        Direction of enumeration.
      * @param   string   $ptstart      Starting timestamp.
      * @param   string   $ptend        Ending timestamp.
-     * @param   array    $ptprop       List of properties to get.
+     * @param   ?array   $ptprop       List of properties to get.
      *
      * @return  object
      *

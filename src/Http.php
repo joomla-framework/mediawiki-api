@@ -22,8 +22,8 @@ class Http extends BaseHttp
     /**
      * Constructor.
      *
-     * @param   array               $options    Client options object.
-     * @param   TransportInterface  $transport  The HTTP transport object.
+     * @param   array                $options    Client options object.
+     * @param   ?TransportInterface  $transport  The HTTP transport object.
      *
      * @since   12.3
      */
