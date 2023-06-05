@@ -17,10 +17,4 @@
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
         <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
-
-    <rule ref="Joomla.Classes.InstantiateNewClasses">
-        <properties>
-            <property name="shortArraySyntax" value="true"/>
-        </properties>
-    </rule>
 </ruleset>
