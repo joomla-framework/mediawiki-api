@@ -1,0 +1,3 @@
+# Mediawiki API package
+
+TODO
