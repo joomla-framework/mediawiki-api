@@ -1,4 +1,4 @@
-# The Archive Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/mediawiki-api/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/mediawiki-api)
+# The Archive Package [![Build Status](https://github.com/joomla-framework/mediawiki-api/actions/workflows/ci.yml/badge.svg?branch=3.x-dev)](https://github.com/joomla-framework/mediawiki-api)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/mediawiki/v/stable)](https://packagist.org/packages/joomla/mediawiki)
 [![Total Downloads](https://poser.pugx.org/joomla/mediawiki/downloads)](https://packagist.org/packages/joomla/mediawiki)
