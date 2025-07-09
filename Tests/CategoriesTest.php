@@ -9,6 +9,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use Laminas\Diactoros\Stream;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Joomla\Http\Response;
@@ -30,7 +31,7 @@ class CategoriesTest extends TestCase
     protected $options;
 
     /**
-     * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -42,7 +43,7 @@ class CategoriesTest extends TestCase
     protected $object;
 
     /**
-     * @var    \Joomla\Http\Response  Mock response object.
+     * @var    \Joomla\Http\Response  Response object.
      * @since  1.0
      */
     protected $response;
@@ -73,13 +74,8 @@ class CategoriesTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client   = $this->createMock(Http::class);
-        $this->response = $this->createMock(Response::class);
-
-        error_reporting($errorLevel);
+        $this->response = new Response('data://text/plain,' . $this->sampleString, 200);
 
         $this->object = new Categories($this->options, $this->client);
     }
@@ -93,13 +89,10 @@ class CategoriesTest extends TestCase
      */
     public function testGetCategories()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=categories&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getCategories(['Main Page']),
@@ -116,13 +109,10 @@ class CategoriesTest extends TestCase
      */
     public function testGetCategoriesUsed()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&generator=categories&prop=info&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getCategoriesUsed(['Main Page']),
@@ -139,13 +129,10 @@ class CategoriesTest extends TestCase
      */
     public function testGetCategoriesInfo()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=categoryinfo&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getCategoriesInfo(['Main Page']),
@@ -162,13 +149,10 @@ class CategoriesTest extends TestCase
      */
     public function testGetCategoryMembers()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=categorymembers&cmtitle=Category:Help&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getCategoryMembers('Category:Help'),
@@ -185,13 +169,10 @@ class CategoriesTest extends TestCase
      */
     public function testEnumerateCategories()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=allcategories&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->enumerateCategories(),
@@ -208,13 +189,10 @@ class CategoriesTest extends TestCase
      */
     public function testGetChangeTags()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=tags&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getChangeTags(),

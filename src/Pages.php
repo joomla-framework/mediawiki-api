@@ -236,7 +236,7 @@ class Pages extends AbstractMediawikiObject
         $ignorewarnings = null
     ) {
         // Get the token.
-        $token = $this->getToken($fromid, 'move');
+        $token = $this->getToken((string) $fromid, 'move');
 
         // Build the request path.
         $path = '?action=move';
@@ -526,9 +526,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=backlinks';
 
-        if (isset($bltitle)) {
-            $path .= '&bltitle=' . $bltitle;
-        }
+        $path .= '&bltitle=' . $bltitle;
 
         if (isset($blpageid)) {
             $path .= '&blpageid=' . $blpageid;
@@ -578,9 +576,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request
         $path = '?action=query&list=iwbacklinks';
 
-        if (isset($iwbltitle)) {
-            $path .= '&iwbltitle=' . $iwbltitle;
-        }
+        $path .= '&iwbltitle=' . $iwbltitle;
 
         if (isset($iwblprefix)) {
             $path .= '&iwblprefix=' . $iwblprefix;

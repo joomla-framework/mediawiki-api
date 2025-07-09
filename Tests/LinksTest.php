@@ -30,7 +30,7 @@ class LinksTest extends TestCase
     protected $options;
 
     /**
-     * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -42,7 +42,7 @@ class LinksTest extends TestCase
     protected $object;
 
     /**
-     * @var    \Joomla\Http\Response  Mock response object.
+     * @var    \Joomla\Http\Response  Response object.
      * @since  1.0
      */
     protected $response;
@@ -73,13 +73,8 @@ class LinksTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client   = $this->createMock(Http::class);
-        $this->response = $this->createMock(Response::class);
-
-        error_reporting($errorLevel);
+        $this->response = new Response('data://text/plain,' . $this->sampleString, 200);
 
         $this->object = new Links($this->options, $this->client);
     }
@@ -93,13 +88,10 @@ class LinksTest extends TestCase
      */
     public function testGetLinks()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=links&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getLinks(['Main Page']),
@@ -116,13 +108,10 @@ class LinksTest extends TestCase
      */
     public function testGetLinksUsed()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&generator=links&prop=info&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getLinksUsed(['Main Page']),
@@ -139,13 +128,10 @@ class LinksTest extends TestCase
      */
     public function testGetIWLinks()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=links&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getIWLinks(['Main Page']),
@@ -162,13 +148,10 @@ class LinksTest extends TestCase
      */
     public function testGetLangLinks()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=langlinks&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getLangLinks(['Main Page']),
@@ -185,13 +168,10 @@ class LinksTest extends TestCase
      */
     public function testGetExtLinks()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&prop=extlinks&titles=Main Page&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getExtLinks(['Main Page']),
@@ -208,13 +188,10 @@ class LinksTest extends TestCase
      */
     public function testEnumerateLinks()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&meta=siteinfo&alcontinue=&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->enumerateLinks(['Main Page']),

@@ -7,6 +7,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Joomla\Http\Response;
 use Joomla\Mediawiki\Http;
@@ -27,7 +28,7 @@ class SitesTest extends TestCase
     protected $options;
 
     /**
-     * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -39,7 +40,7 @@ class SitesTest extends TestCase
     protected $object;
 
     /**
-     * @var    \Joomla\Http\Response  Mock response object.
+     * @var    \Joomla\Http\Response  Response object.
      * @since  1.0
      */
     protected $response;
@@ -70,13 +71,8 @@ class SitesTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client   = $this->createMock(Http::class);
-        $this->response = $this->createMock(Response::class);
-
-        error_reporting($errorLevel);
+        $this->response = new Response('data://text/plain,' . $this->sampleString, 200);
 
         $this->object = new Sites($this->options, $this->client);
     }
@@ -90,13 +86,10 @@ class SitesTest extends TestCase
      */
     public function testGetSiteInfo()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&meta=siteinfo&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getSiteInfo(),
@@ -113,13 +106,10 @@ class SitesTest extends TestCase
      */
     public function testGetEvents()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=logevents&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getEvents(),
@@ -136,13 +126,10 @@ class SitesTest extends TestCase
      */
     public function testGetRecentChanges()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=recentchanges&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getRecentChanges(),
@@ -159,13 +146,10 @@ class SitesTest extends TestCase
      */
     public function testGetProtectedTitles()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=protectedtitles&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getProtectedTitles(),

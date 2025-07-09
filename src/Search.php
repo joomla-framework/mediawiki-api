@@ -45,9 +45,7 @@ class Search extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=search';
 
-        if (isset($srsearch)) {
-            $path .= '&srsearch=' . $srsearch;
-        }
+        $path .= '&srsearch=' . $srsearch;
 
         if (isset($srnamespace)) {
             $path .= '&srnamespace=' . $this->buildParameter($srnamespace);
@@ -101,9 +99,7 @@ class Search extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=search';
 
-        if (isset($search)) {
-            $path .= '&search=' . $search;
-        }
+        $path .= '&search=' . $search;
 
         if (isset($limit)) {
             $path .= '&limit=' . $limit;

@@ -9,6 +9,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Joomla\Mediawiki\Http;
 use Joomla\Registry\Registry;
@@ -29,7 +30,7 @@ class AbstractMediawikiObjectTest extends TestCase
     protected $options;
 
     /**
-     * @var    \Joomla\Mediawiki\Http  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -66,12 +67,7 @@ class AbstractMediawikiObjectTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client = $this->createMock(Http::class);
-
-        error_reporting($errorLevel);
 
         $this->object = new AbstractMediawikiObjectMock($this->options, $this->client);
     }

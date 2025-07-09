@@ -109,7 +109,7 @@ abstract class AbstractMediawikiObject
      */
     public function validateResponse(Response $response)
     {
-        $xml = simplexml_load_string($response->body);
+        $xml = simplexml_load_string($response->getBody()->getContents());
 
         if (isset($xml->warnings)) {
             throw new \DomainException($xml->warnings->info);
