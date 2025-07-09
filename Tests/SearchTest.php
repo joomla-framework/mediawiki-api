@@ -7,6 +7,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Joomla\Http\Response;
 use Joomla\Mediawiki\Http;
@@ -27,7 +28,7 @@ class SearchTest extends TestCase
     protected $options;
 
     /**
-     * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -39,7 +40,7 @@ class SearchTest extends TestCase
     protected $object;
 
     /**
-     * @var    \Joomla\Http\Response  Mock response object.
+     * @var    \Joomla\Http\Response  Response object.
      * @since  1.0
      */
     protected $response;
@@ -70,13 +71,8 @@ class SearchTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client   = $this->createMock(Http::class);
-        $this->response = $this->createMock(Response::class);
-
-        error_reporting($errorLevel);
+        $this->response = new Response('data://text/plain,' . $this->sampleString, 200);
 
         $this->object = new Search($this->options, $this->client);
     }
@@ -90,13 +86,10 @@ class SearchTest extends TestCase
      */
     public function testSearch()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=search&srsearch=test&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->search('test'),
@@ -113,13 +106,10 @@ class SearchTest extends TestCase
      */
     public function testOpenSearch()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=search&search=test&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->openSearch('test'),

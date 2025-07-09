@@ -7,6 +7,7 @@
 
 namespace Joomla\Mediawiki\Tests;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Joomla\Http\Response;
 use Joomla\Mediawiki\Http;
@@ -27,7 +28,7 @@ class UsersTest extends TestCase
     protected $options;
 
     /**
-     * @var    \PHPUnit\Framework\MockObject\MockObject  Mock client object.
+     * @var    \Joomla\Http\Http&MockObject  Mock client object.
      * @since  1.0
      */
     protected $client;
@@ -39,7 +40,7 @@ class UsersTest extends TestCase
     protected $object;
 
     /**
-     * @var    \Joomla\Http\Response  Mock response object.
+     * @var    \Joomla\Http\Response  Response object.
      * @since  1.0
      */
     protected $response;
@@ -70,14 +71,9 @@ class UsersTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->client = $this->createMock(Http::class);
         // Add methods ['get', 'post', 'delete', 'patch', 'put']
-        $this->response = $this->createMock(Response::class);
-
-        error_reporting($errorLevel);
+        $this->response = new Response('data://text/plain,' . $this->sampleString, 200);
 
         $this->object = new Users($this->options, $this->client);
     }
@@ -91,13 +87,10 @@ class UsersTest extends TestCase
      */
     public function testGetUserInfo()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=users&ususers=Joomla&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getUserInfo(['Joomla']),
@@ -114,13 +107,10 @@ class UsersTest extends TestCase
      */
     public function testGetCurrentUserInfo()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&meta=userinfo&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getCurrentUserInfo(),
@@ -137,13 +127,10 @@ class UsersTest extends TestCase
      */
     public function testGetUserContribs()
     {
-        $this->response->code = 200;
-        $this->response->body = $this->sampleString;
-
         $this->client->expects($this->once())
             ->method('get')
             ->with('/api.php?action=query&list=usercontribs&ucuser=Joomla&format=xml')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->assertThat(
             $this->object->getUserContribs('Joomla'),

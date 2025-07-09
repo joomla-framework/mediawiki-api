@@ -66,12 +66,7 @@ class HttpTest extends TestCase
     {
         $this->options = new Registry();
 
-        $errorLevel = error_reporting();
-        error_reporting($errorLevel & ~E_DEPRECATED);
-
         $this->transport = $this->createMock(Stream::class);
-
-        error_reporting($errorLevel);
 
         $this->object = new Http($this->options, $this->transport);
     }
@@ -90,7 +85,7 @@ class HttpTest extends TestCase
         $this->transport->expects($this->once())
             ->method('request')
             ->with('GET', $uri)
-            ->will($this->returnValue('requestResponse'));
+            ->willReturn('requestResponse');
 
         $this->assertThat(
             $this->object->get('https://example.com/gettest'),
@@ -112,7 +107,7 @@ class HttpTest extends TestCase
         $this->transport->expects($this->once())
             ->method('request')
             ->with('POST', $uri, [])
-            ->will($this->returnValue('requestResponse'));
+            ->willReturn('requestResponse');
 
         $this->assertThat(
             $this->object->post('https://example.com/gettest', []),
