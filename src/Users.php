@@ -61,7 +61,7 @@ class Users extends AbstractMediawikiObject
         $cookiePrefix = $responseBody->login['cookieprefix'];
         $cookie       = $cookiePrefix . 'UserID=' . $responseBody->login['lguserid'] . '; ' . $cookiePrefix
             . 'UserName=' . $responseBody->login['lgusername'];
-        $headers['Cookie'] = $headers['Cookie'] . '; ' . $responseHeaders['Set-Cookie'] . '; ' . $cookie;
+        $headers['Cookie'] = $headers['Cookie'] . '; ' . implode(';', $responseHeaders['Set-Cookie']) . '; ' . $cookie;
         $this->options->set('headers', $headers);
 
         return $this->validateResponse($response);
