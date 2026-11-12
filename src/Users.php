@@ -9,6 +9,8 @@
 
 namespace Joomla\Mediawiki;
 
+use Joomla\Http\Response;
+
 /**
  * MediaWiki API Users class.
  *
@@ -18,6 +20,11 @@ class Users extends AbstractMediawikiObject
 {
     /**
      * Method to login and get authentication tokens.
+     *
+     * The login token is requested with `action=query&meta=tokens&type=login`. The credentials are sent
+     * in the body of a POST request, never in the URL. The session cookies the wiki returns are stored
+     * in the `headers` option of the HTTP client, so later requests through the same client are
+     * authenticated.
      *
      * @param   string  $lgname      User Name.
      * @param   string  $lgpassword  Password.
@@ -29,42 +36,92 @@ class Users extends AbstractMediawikiObject
      */
     public function login($lgname, $lgpassword, $lgdomain = null)
     {
-        // Build the request path.
-        $path = '?action=login&lgname=' . $lgname . '&lgpassword=' . $lgpassword;
+        // Fetch a login token. The response starts the session the token belongs to.
+        $response = $this->client->get($this->fetchUrl('?action=query&meta=tokens&type=login'));
+        $token    = (string) $this->validateResponse($response)->query->tokens['logintoken'];
+
+        $this->storeCookies($response);
+
+        // Build the request data.
+        $data = [
+            'lgname'     => $lgname,
+            'lgpassword' => $lgpassword,
+            'lgtoken'    => $token,
+        ];
 
         if (isset($lgdomain)) {
-            $path .= '&lgdomain=' . $lgdomain;
+            $data['lgdomain'] = $lgdomain;
         }
 
-        // Send the request.
-        $response = $this->client->post($this->fetchUrl($path), null);
+        // Send the credentials with the token.
+        $response = $this->client->post($this->fetchUrl('?action=login'), $data);
 
-        // Request path with login token.
-        $path = '?action=login&lgname=' . $lgname . '&lgpassword=' . $lgpassword . '&lgtoken=' . $this->validateResponse($response)->login['token'];
-
-        if (isset($lgdomain)) {
-            $path .= '&lgdomain=' . $lgdomain;
-        }
-
-        // Set the session cookies returned.
-        $headers           = (array) $this->options->get('headers');
-        $headers['Cookie'] = $headers['Cookie'] ?? '';
-        $headers['Cookie'] .= $response->getHeaders()['Set-Cookie'];
-        $this->options->set('headers', $headers);
-
-        // Send the request again with the token.
-        $response     = $this->client->post($this->fetchUrl($path), null);
-        $responseBody = $this->validateResponse($response);
-
-        $headers      = (array) $this->options->get('headers');
-        $responseHeaders = $response->getHeaders();
-        $cookiePrefix = $responseBody->login['cookieprefix'];
-        $cookie       = $cookiePrefix . 'UserID=' . $responseBody->login['lguserid'] . '; ' . $cookiePrefix
-            . 'UserName=' . $responseBody->login['lgusername'];
-        $headers['Cookie'] = $headers['Cookie'] . '; ' . implode(';', $responseHeaders['Set-Cookie']) . '; ' . $cookie;
-        $this->options->set('headers', $headers);
+        $this->storeCookies($response);
 
         return $this->validateResponse($response);
+    }
+
+    /**
+     * Store the cookies set by a response in the `Cookie` header of the HTTP client.
+     *
+     * Cookies already in the header are kept unless the response replaces them.
+     *
+     * @param   Response  $response  The response from the mediawiki server.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function storeCookies(Response $response): void
+    {
+        $setCookies = $response->getHeader('Set-Cookie');
+
+        if ($setCookies === []) {
+            return;
+        }
+
+        $headers = (array) $this->client->getOption('headers', []);
+        $cookies = [];
+
+        foreach (explode(';', (string) ($headers['Cookie'] ?? '')) as $cookie) {
+            $this->addCookie($cookies, $cookie);
+        }
+
+        foreach ($setCookies as $setCookie) {
+            // Only the name=value part is sent back; the attributes after the first ';' are not.
+            $this->addCookie($cookies, explode(';', $setCookie, 2)[0]);
+        }
+
+        $pairs = [];
+
+        foreach ($cookies as $name => $value) {
+            $pairs[] = $name . '=' . $value;
+        }
+
+        $headers['Cookie'] = implode('; ', $pairs);
+
+        $this->client->setOption('headers', $headers);
+    }
+
+    /**
+     * Add a name=value pair to a list of cookies.
+     *
+     * @param   array   $cookies  The cookies, keyed by name.
+     * @param   string  $cookie   The name=value pair.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function addCookie(array &$cookies, string $cookie): void
+    {
+        $parts = explode('=', trim($cookie), 2);
+
+        if ($parts[0] === '' || \count($parts) !== 2) {
+            return;
+        }
+
+        $cookies[$parts[0]] = $parts[1];
     }
 
     /**

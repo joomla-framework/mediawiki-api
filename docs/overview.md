@@ -63,21 +63,21 @@ $mediawiki->users->login('BotUser@BotName', $botPassword);
 $mediawiki->users->logout();
 ```
 
-`login()` performs the two-step token exchange the Action API requires.
+`login()` fetches a login token with `action=query&meta=tokens&type=login` and then posts the
+name, password, token and optional domain to `action=login` in the request body. The credentials
+never appear in the URL. Since MediaWiki 1.27, `action=login` only accepts
+[bot passwords](https://www.mediawiki.org/wiki/Manual:Bot_passwords): create one on
+`Special:BotPasswords` with the narrowest grants you need and log in as `User@BotName`. Logging in
+with the main account password this way is deprecated and refused by many wikis. Interactive
+logins (`action=clientlogin`) and OAuth are not supported.
 
-> **The credentials travel in the query string.** `Users::login()` builds the request as
-> `?action=login&lgname=…&lgpassword=…`, so the password appears in the wiki's access log, in any
-> proxy log along the way, and in a `Referer` header. It is also inserted without URL-encoding, so
-> a password containing `&`, `#` or a space produces a malformed request — or injects additional
-> API parameters.
->
-> Use a dedicated bot password with the narrowest possible grants
-> ([Special:BotPasswords](https://www.mediawiki.org/wiki/Manual:Bot_passwords)), never a real
-> account password, and treat the wiki's request log as containing that secret.
+The session cookies the wiki sets are stored in the `Cookie` entry of the HTTP client's `headers`
+option. `Mediawiki` hands the same client to every endpoint object, so all later requests made
+through it are authenticated. Cookies already configured there are kept.
 
-The same applies to `api.username` and `api.password` in the options:
+`api.username` and `api.password` in the options are a different matter:
 `AbstractMediawikiObject::fetchUrl()` writes them into the URL's userinfo, so they become part of
-the URL string as well.
+the URL string.
 
 ## Options
 
@@ -114,10 +114,6 @@ attention upstream over time.
 comparison to decide where to place the `|` separator, so an element that is falsy — `'0'` or an
 empty string — loses its separator. Build multi-value parameters with `implode('|', $values)`
 yourself when the values are not guaranteed to be non-empty.
-
-**The login flow is the pre-1.27 one.** `action=login` with a name and password was replaced by
-`action=clientlogin` and bot passwords. It still works for bot passwords in the `User@BotName`
-form, but not for normal accounts on a current wiki.
 
 **No `maxlag`, no rate limiting, no continuation.** The client sends no `maxlag` parameter — which
 the Wikimedia projects expect from automated clients — has no backoff, and does not follow the
