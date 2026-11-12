@@ -19,11 +19,11 @@ class Images extends AbstractMediawikiObject
     /**
      * Method to get all images contained on the given page(s).
      *
-     * @param   array    $titles         Page titles to retrieve images.
-     * @param   integer  $imagelimit     How many images to return.
-     * @param   boolean  $imagecontinue  When more results are available, use this to continue.
-     * @param   integer  $imimages       Only list these images.
-     * @param   string   $imdir          The direction in which to list.
+     * @param   array           $titles         Page titles to retrieve images.
+     * @param   integer         $imagelimit     How many images to return.
+     * @param   string|boolean  $imagecontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   integer         $imimages       Only list these images.
+     * @param   string          $imdir          The direction in which to list.
      *
      * @return  object
      *
@@ -35,22 +35,22 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&prop=images';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($imagelimit)) {
-            $path .= '&imagelimit=' . $imagelimit;
+            $path .= '&imlimit=' . $this->encodeParameter($imagelimit);
         }
 
         if ($imagecontinue) {
-            $path .= '&imagecontinue=';
+            $path .= '&imcontinue=' . $this->encodeContinuation($imagecontinue);
         }
 
         if (isset($imimages)) {
-            $path .= '&imimages=' . $imimages;
+            $path .= '&imimages=' . $this->encodeParameter($imimages);
         }
 
         if (isset($imdir)) {
-            $path .= '&imdir=' . $imdir;
+            $path .= '&imdir=' . $this->encodeParameter($imdir);
         }
 
         // Send the request.
@@ -74,7 +74,7 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&generator=images&prop=info';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         // Send the request.
         $response = $this->client->get($this->fetchUrl($path));
@@ -85,15 +85,16 @@ class Images extends AbstractMediawikiObject
     /**
      * Method to get all image information and upload history.
      *
-     * @param   ?array    $liprop             What image information to get.
-     * @param   integer   $lilimit            How many image revisions to return.
-     * @param   string    $listart            Timestamp to start listing from.
-     * @param   string    $liend              Timestamp to stop listing at.
-     * @param   integer   $liurlwidth         URL to an image scaled to this width will be returned..
-     * @param   integer   $liurlheight        URL to an image scaled to this height will be returned.
-     * @param   string    $limetadataversion  Version of metadata to use.
-     * @param   string    $liurlparam         A handler specific parameter string.
-     * @param   boolean   $licontinue         When more results are available, use this to continue.
+     * @param   ?array          $liprop             What image information to get.
+     * @param   integer         $lilimit            How many image revisions to return.
+     * @param   string          $listart            Timestamp to start listing from.
+     * @param   string          $liend              Timestamp to stop listing at.
+     * @param   integer         $liurlwidth         URL to an image scaled to this width will be returned..
+     * @param   integer         $liurlheight        URL to an image scaled to this height will be returned.
+     * @param   string          $limetadataversion  Version of metadata to use.
+     * @param   string          $liurlparam         A handler specific parameter string.
+     * @param   string|boolean  $licontinue         The continuation value from the previous response; `true` sends an empty value.
+     * @param   ?array          $titles             The files to get information for, with the `File:` prefix.
      *
      * @return  object
      *
@@ -108,45 +109,50 @@ class Images extends AbstractMediawikiObject
         $liurlheight = null,
         $limetadataversion = null,
         $liurlparam = null,
-        $licontinue = null
+        $licontinue = null,
+        ?array $titles = null
     ) {
         // Build the request.
         $path = '?action=query&prop=imageinfo';
 
+        if (isset($titles)) {
+            $path .= '&titles=' . $this->encodeParameter($titles);
+        }
+
         if (isset($liprop)) {
-            $path .= '&liprop=' . $this->buildParameter($liprop);
+            $path .= '&iiprop=' . $this->encodeParameter($liprop);
         }
 
         if (isset($lilimit)) {
-            $path .= '&lilimit=' . $lilimit;
+            $path .= '&iilimit=' . $this->encodeParameter($lilimit);
         }
 
         if (isset($listart)) {
-            $path .= '&listart=' . $listart;
+            $path .= '&iistart=' . $this->encodeParameter($listart);
         }
 
         if (isset($liend)) {
-            $path .= '&liend=' . $liend;
+            $path .= '&iiend=' . $this->encodeParameter($liend);
         }
 
         if (isset($liurlwidth)) {
-            $path .= '&liurlwidth=' . $liurlwidth;
+            $path .= '&iiurlwidth=' . $this->encodeParameter($liurlwidth);
         }
 
         if (isset($liurlheight)) {
-            $path .= '&liurlheight=' . $liurlheight;
+            $path .= '&iiurlheight=' . $this->encodeParameter($liurlheight);
         }
 
         if (isset($limetadataversion)) {
-            $path .= '&limetadataversion=' . $limetadataversion;
+            $path .= '&iimetadataversion=' . $this->encodeParameter($limetadataversion);
         }
 
         if (isset($liurlparam)) {
-            $path .= '&liurlparam=' . $liurlparam;
+            $path .= '&iiurlparam=' . $this->encodeParameter($liurlparam);
         }
 
         if ($licontinue) {
-            $path .= '&alcontinue=';
+            $path .= '&iicontinue=' . $this->encodeContinuation($licontinue);
         }
 
         // Send the request.
@@ -191,47 +197,47 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&list=allimages';
 
         if (isset($aifrom)) {
-            $path .= '&aifrom=' . $aifrom;
+            $path .= '&aifrom=' . $this->encodeParameter($aifrom);
         }
 
         if (isset($aito)) {
-            $path .= '&aito=' . $aito;
+            $path .= '&aito=' . $this->encodeParameter($aito);
         }
 
         if (isset($aiprefix)) {
-            $path .= '&aiprefix=' . $aiprefix;
+            $path .= '&aiprefix=' . $this->encodeParameter($aiprefix);
         }
 
         if (isset($aiminsize)) {
-            $path .= '&aiminsize=' . $aiminsize;
+            $path .= '&aiminsize=' . $this->encodeParameter($aiminsize);
         }
 
         if (isset($aimaxsize)) {
-            $path .= '&aimaxsize=' . $aimaxsize;
+            $path .= '&aimaxsize=' . $this->encodeParameter($aimaxsize);
         }
 
         if (isset($ailimit)) {
-            $path .= '&ailimit=' . $ailimit;
+            $path .= '&ailimit=' . $this->encodeParameter($ailimit);
         }
 
         if (isset($aidir)) {
-            $path .= '&aidir=' . $aidir;
+            $path .= '&aidir=' . $this->encodeParameter($aidir);
         }
 
         if (isset($aisha1)) {
-            $path .= '&aisha1=' . $aisha1;
+            $path .= '&aisha1=' . $this->encodeParameter($aisha1);
         }
 
         if (isset($aisha1base36)) {
-            $path .= '&$aisha1base36=' . $aisha1base36;
+            $path .= '&aisha1base36=' . $this->encodeParameter($aisha1base36);
         }
 
         if (isset($aiprop)) {
-            $path .= '&aiprop=' . $this->buildParameter($aiprop);
+            $path .= '&aiprop=' . $this->encodeParameter($aiprop);
         }
 
         if (isset($aimime)) {
-            $path .= '&aimime=' . $aimime;
+            $path .= '&aimime=' . $this->encodeParameter($aimime);
         }
 
         // Send the request.
