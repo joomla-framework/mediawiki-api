@@ -21,6 +21,26 @@ use Joomla\Uri\Uri;
 abstract class AbstractMediawikiObject
 {
     /**
+     * The token types of `action=query&meta=tokens` for the names of the removed `intoken` parameter.
+     *
+     * @var    array
+     * @since  __DEPLOY_VERSION__
+     */
+    private const TOKEN_TYPES = [
+        'block'     => 'csrf',
+        'delete'    => 'csrf',
+        'edit'      => 'csrf',
+        'email'     => 'csrf',
+        'emailuser' => 'csrf',
+        'import'    => 'csrf',
+        'move'      => 'csrf',
+        'options'   => 'csrf',
+        'protect'   => 'csrf',
+        'unblock'   => 'csrf',
+        'undelete'  => 'csrf',
+    ];
+
+    /**
      * @var    Registry  Options for the Mediawiki object.
      * @since  1.0
      */
@@ -49,7 +69,7 @@ abstract class AbstractMediawikiObject
     /**
      * Method to build and return a full request URL for the request.
      *
-     * @param   string  $path  URL to inflect
+     * @param   string  $path  The query string of the request, starting with '?'. Values must be encoded.
      *
      * @return  string   The request URL.
      *
@@ -58,7 +78,7 @@ abstract class AbstractMediawikiObject
     protected function fetchUrl($path)
     {
         // Append the path with output format
-        $path .= '&format=xml';
+        $path .= (strpos($path, '?') === false ? '?' : '&') . 'format=xml';
 
         $uri = new Uri($this->options->get('api.url') . '/api.php' . $path);
 
@@ -71,6 +91,50 @@ abstract class AbstractMediawikiObject
         }
 
         return (string) $uri;
+    }
+
+    /**
+     * Encode a value for use in the query string of a request.
+     *
+     * Every value is percent-encoded (RFC 3986), so characters such as `&`, `#`, `=` or `+` in a title
+     * or search term are sent as part of the value instead of changing the request. The elements of an
+     * array are encoded one by one and joined with `|`, the separator MediaWiki uses for lists.
+     *
+     * @param   array|string|int|float|bool  $value  The value or list of values.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function encodeParameter(array|string|int|float|bool $value): string
+    {
+        if (!\is_array($value)) {
+            return rawurlencode((string) $value);
+        }
+
+        return implode('|', array_map(static fn ($element) => rawurlencode((string) $element), $value));
+    }
+
+    /**
+     * Fetch a token for a data-modifying action with `action=query&meta=tokens`.
+     *
+     * Accepts the current token types (`csrf`, `rollback`, `userrights`, `watch`, `patrol`, `login`, …)
+     * and the names of the removed `intoken` parameter (`edit`, `delete`, `move`, `block`, …), which are
+     * mapped to `csrf`.
+     *
+     * @param   string  $type  The token type.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function fetchToken(string $type): string
+    {
+        $type = self::TOKEN_TYPES[$type] ?? $type;
+
+        $response = $this->client->get($this->fetchUrl('?action=query&meta=tokens&type=' . $this->encodeParameter($type)));
+
+        return (string) $this->validateResponse($response)->query->tokens[$type . 'token'];
     }
 
     /**

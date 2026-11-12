@@ -42,7 +42,7 @@ class Pages extends AbstractMediawikiObject
             'title'        => $title,
             'token'        => $token,
             'section'      => $section,
-            'sectiontitle' => $section,
+            'sectiontitle' => $sectiontitle,
             'text'         => $text,
             'summary'      => $summary,
         ];
@@ -193,7 +193,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'from'           => $from,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -244,7 +244,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'fromid'         => $fromid,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -286,7 +286,7 @@ class Pages extends AbstractMediawikiObject
             'title'     => $title,
             'token'     => $token,
             'user'      => $user,
-            'expiry'    => $summary,
+            'summary'   => $summary,
             'markbot'   => $markbot,
             'watchlist' => $watchlist,
         ];
@@ -314,7 +314,7 @@ class Pages extends AbstractMediawikiObject
     public function changeProtection($title, $protections, $expiry = null, $reason = null, $cascade = null, $watchlist = null)
     {
         // Get the token.
-        $token = $this->getToken($title, 'unblock');
+        $token = $this->getToken($title, 'protect');
 
         // Build the request path.
         $path = '?action=protect';
@@ -341,7 +341,7 @@ class Pages extends AbstractMediawikiObject
      *
      * @param   array    $titles      Page titles to retrieve info.
      * @param   ?array   $inprop      Which additional properties to get.
-     * @param   ?array   $intoken     Request a token to perform a data-modifying action on a page
+     * @param   ?array   $intoken     Deprecated, removed from MediaWiki. Use Pages::getToken() instead.
      * @param   boolean  $incontinue  When more results are available, use this to continue.
      *
      * @return  object
@@ -354,14 +354,22 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=info';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($inprop)) {
-            $path .= '&inprop=' . $this->buildParameter($inprop);
+            $path .= '&inprop=' . $this->encodeParameter($inprop);
         }
 
         if (isset($intoken)) {
-            $path .= '&intoken=' . $this->buildParameter($intoken);
+            trigger_deprecation(
+                'joomla/mediawiki',
+                '__DEPLOY_VERSION__',
+                'The $intoken parameter of %s() is deprecated and will be removed in 5.0. MediaWiki no longer supports it; use %s::getToken() instead.',
+                __METHOD__,
+                self::class
+            );
+
+            $path .= '&intoken=' . $this->encodeParameter($intoken);
         }
 
         if ($incontinue) {
@@ -391,14 +399,14 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=pageprops';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($ppcontinue) {
             $path .= '&ppcontinue=';
         }
 
         if (isset($ppprop)) {
-            $path .= '&ppprop=' . $ppprop;
+            $path .= '&ppprop=' . $this->encodeParameter($ppprop);
         }
 
         // Send the request.
@@ -425,10 +433,10 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=revisions';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($rvprop)) {
-            $path .= '&rvprop=' . $this->buildParameter($rvprop);
+            $path .= '&rvprop=' . $this->encodeParameter($rvprop);
         }
 
         if ($rvparse) {
@@ -436,7 +444,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($rvlimit)) {
-            $path .= '&rvlimit=' . $rvlimit;
+            $path .= '&rvlimit=' . $this->encodeParameter($rvlimit);
         }
 
         // Send the request.
@@ -471,14 +479,14 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=templates';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($tlnamespace)) {
-            $path .= '&tlnamespace=' . $this->buildParameter($tlnamespace);
+            $path .= '&tlnamespace=' . $this->encodeParameter($tlnamespace);
         }
 
         if (isset($tllimit)) {
-            $path .= '&tllimit=' . $tllimit;
+            $path .= '&tllimit=' . $this->encodeParameter($tllimit);
         }
 
         if ($tlcontinue) {
@@ -486,11 +494,11 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($tltemplates)) {
-            $path .= '&tltemplates=' . $tltemplates;
+            $path .= '&tltemplates=' . $this->encodeParameter($tltemplates);
         }
 
         if (isset($tldir)) {
-            $path .= '&tldir=' . $tldir;
+            $path .= '&tldir=' . $this->encodeParameter($tldir);
         }
 
         // Send the request.
@@ -526,10 +534,10 @@ class Pages extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=backlinks';
 
-        $path .= '&bltitle=' . $bltitle;
+        $path .= '&bltitle=' . $this->encodeParameter($bltitle);
 
         if (isset($blpageid)) {
-            $path .= '&blpageid=' . $blpageid;
+            $path .= '&blpageid=' . $this->encodeParameter($blpageid);
         }
 
         if ($blcontinue) {
@@ -537,15 +545,15 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($blnamespace)) {
-            $path .= '&blnamespace=' . $this->buildParameter($blnamespace);
+            $path .= '&blnamespace=' . $this->encodeParameter($blnamespace);
         }
 
         if (isset($blfilterredirect)) {
-            $path .= '&blfilterredirect=' . $blfilterredirect;
+            $path .= '&blfilterredirect=' . $this->encodeParameter($blfilterredirect);
         }
 
         if (isset($bllimit)) {
-            $path .= '&bllimit=' . $bllimit;
+            $path .= '&bllimit=' . $this->encodeParameter($bllimit);
         }
 
         if ($blredirect) {
@@ -576,10 +584,10 @@ class Pages extends AbstractMediawikiObject
         // Build the request
         $path = '?action=query&list=iwbacklinks';
 
-        $path .= '&iwbltitle=' . $iwbltitle;
+        $path .= '&iwbltitle=' . $this->encodeParameter($iwbltitle);
 
         if (isset($iwblprefix)) {
-            $path .= '&iwblprefix=' . $iwblprefix;
+            $path .= '&iwblprefix=' . $this->encodeParameter($iwblprefix);
         }
 
         if ($iwblcontinue) {
@@ -587,11 +595,11 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($iwbllimit)) {
-            $path .= '&bllimit=' . $iwbllimit;
+            $path .= '&bllimit=' . $this->encodeParameter($iwbllimit);
         }
 
         if (isset($iwblprop)) {
-            $path .= '&iwblprop=' . $this->buildParameter($iwblprop);
+            $path .= '&iwblprop=' . $this->encodeParameter($iwblprop);
         }
 
         // Send the request.
@@ -603,7 +611,11 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get access token.
      *
-     * @param   string  $user     The User to get token.
+     * The token is requested with `action=query&meta=tokens`. The old `intoken` names (`edit`, `delete`,
+     * `move`, `block`, `emailuser`, …) are mapped to the `csrf` token; `rollback` and `userrights` have
+     * their own tokens.
+     *
+     * @param   string  $user     Unused. Tokens are not bound to a page or user.
      * @param   string  $intoken  The type of token.
      *
      * @return  string
@@ -612,12 +624,6 @@ class Pages extends AbstractMediawikiObject
      */
     public function getToken($user, $intoken)
     {
-        // Build the request path.
-        $path = '?action=query&prop=info&intoken=' . $intoken . '&titles=User:' . $user;
-
-        // Send the request.
-        $response = $this->client->post($this->fetchUrl($path), null);
-
-        return (string) $this->validateResponse($response)->query->pages->page[$intoken . 'token'];
+        return $this->fetchToken((string) $intoken);
     }
 }

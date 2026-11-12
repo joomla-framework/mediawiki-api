@@ -35,10 +35,10 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&prop=images';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($imagelimit)) {
-            $path .= '&imagelimit=' . $imagelimit;
+            $path .= '&imagelimit=' . $this->encodeParameter($imagelimit);
         }
 
         if ($imagecontinue) {
@@ -46,11 +46,11 @@ class Images extends AbstractMediawikiObject
         }
 
         if (isset($imimages)) {
-            $path .= '&imimages=' . $imimages;
+            $path .= '&imimages=' . $this->encodeParameter($imimages);
         }
 
         if (isset($imdir)) {
-            $path .= '&imdir=' . $imdir;
+            $path .= '&imdir=' . $this->encodeParameter($imdir);
         }
 
         // Send the request.
@@ -74,7 +74,7 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&generator=images&prop=info';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         // Send the request.
         $response = $this->client->get($this->fetchUrl($path));
@@ -114,35 +114,35 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&prop=imageinfo';
 
         if (isset($liprop)) {
-            $path .= '&liprop=' . $this->buildParameter($liprop);
+            $path .= '&liprop=' . $this->encodeParameter($liprop);
         }
 
         if (isset($lilimit)) {
-            $path .= '&lilimit=' . $lilimit;
+            $path .= '&lilimit=' . $this->encodeParameter($lilimit);
         }
 
         if (isset($listart)) {
-            $path .= '&listart=' . $listart;
+            $path .= '&listart=' . $this->encodeParameter($listart);
         }
 
         if (isset($liend)) {
-            $path .= '&liend=' . $liend;
+            $path .= '&liend=' . $this->encodeParameter($liend);
         }
 
         if (isset($liurlwidth)) {
-            $path .= '&liurlwidth=' . $liurlwidth;
+            $path .= '&liurlwidth=' . $this->encodeParameter($liurlwidth);
         }
 
         if (isset($liurlheight)) {
-            $path .= '&liurlheight=' . $liurlheight;
+            $path .= '&liurlheight=' . $this->encodeParameter($liurlheight);
         }
 
         if (isset($limetadataversion)) {
-            $path .= '&limetadataversion=' . $limetadataversion;
+            $path .= '&limetadataversion=' . $this->encodeParameter($limetadataversion);
         }
 
         if (isset($liurlparam)) {
-            $path .= '&liurlparam=' . $liurlparam;
+            $path .= '&liurlparam=' . $this->encodeParameter($liurlparam);
         }
 
         if ($licontinue) {
@@ -191,47 +191,47 @@ class Images extends AbstractMediawikiObject
         $path = '?action=query&list=allimages';
 
         if (isset($aifrom)) {
-            $path .= '&aifrom=' . $aifrom;
+            $path .= '&aifrom=' . $this->encodeParameter($aifrom);
         }
 
         if (isset($aito)) {
-            $path .= '&aito=' . $aito;
+            $path .= '&aito=' . $this->encodeParameter($aito);
         }
 
         if (isset($aiprefix)) {
-            $path .= '&aiprefix=' . $aiprefix;
+            $path .= '&aiprefix=' . $this->encodeParameter($aiprefix);
         }
 
         if (isset($aiminsize)) {
-            $path .= '&aiminsize=' . $aiminsize;
+            $path .= '&aiminsize=' . $this->encodeParameter($aiminsize);
         }
 
         if (isset($aimaxsize)) {
-            $path .= '&aimaxsize=' . $aimaxsize;
+            $path .= '&aimaxsize=' . $this->encodeParameter($aimaxsize);
         }
 
         if (isset($ailimit)) {
-            $path .= '&ailimit=' . $ailimit;
+            $path .= '&ailimit=' . $this->encodeParameter($ailimit);
         }
 
         if (isset($aidir)) {
-            $path .= '&aidir=' . $aidir;
+            $path .= '&aidir=' . $this->encodeParameter($aidir);
         }
 
         if (isset($aisha1)) {
-            $path .= '&aisha1=' . $aisha1;
+            $path .= '&aisha1=' . $this->encodeParameter($aisha1);
         }
 
         if (isset($aisha1base36)) {
-            $path .= '&$aisha1base36=' . $aisha1base36;
+            $path .= '&$aisha1base36=' . $this->encodeParameter($aisha1base36);
         }
 
         if (isset($aiprop)) {
-            $path .= '&aiprop=' . $this->buildParameter($aiprop);
+            $path .= '&aiprop=' . $this->encodeParameter($aiprop);
         }
 
         if (isset($aimime)) {
-            $path .= '&aimime=' . $aimime;
+            $path .= '&aimime=' . $this->encodeParameter($aimime);
         }
 
         // Send the request.

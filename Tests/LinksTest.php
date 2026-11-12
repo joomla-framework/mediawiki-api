@@ -90,7 +90,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=links&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=links&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -110,7 +110,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&generator=links&prop=info&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&generator=links&prop=info&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -130,7 +130,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=links&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=links&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -150,7 +150,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=langlinks&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=langlinks&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -170,7 +170,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=extlinks&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=extlinks&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
