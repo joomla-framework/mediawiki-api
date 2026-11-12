@@ -110,10 +110,8 @@ at wikis you trust.
 MediaWiki has treated XML as deprecated in favour of JSON for years, so expect it to receive less
 attention upstream over time.
 
-**`buildParameter()` mis-joins some lists.** It walks the array with `next()` and a loose
-comparison to decide where to place the `|` separator, so an element that is falsy — `'0'` or an
-empty string — loses its separator. Build multi-value parameters with `implode('|', $values)`
-yourself when the values are not guaranteed to be non-empty.
+**`buildParameter()` joins a list with `|`.** Every element is separated, including falsy ones
+such as `'0'` (the main namespace) or `''`: `['A', '0', 'B']` gives `A|0|B`.
 
 **The login flow is the pre-1.27 one.** `action=login` with a name and password was replaced by
 `action=clientlogin` and bot passwords. It still works for bot passwords in the `User@BotName`
