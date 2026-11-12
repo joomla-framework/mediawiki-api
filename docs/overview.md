@@ -40,6 +40,13 @@ Each is a lazily created property on `Mediawiki`:
 | `$mediawiki->search` | `Search` | Full-text search, opensearch |
 | `$mediawiki->sites` | `Sites` | Site info, meta information |
 
+The method arguments are named after the MediaWiki parameters they fill (`$cllimit` → `cllimit`),
+with a few historical exceptions: `Images::getImages()` sends `$imagelimit`/`$imagecontinue` as
+`imlimit`/`imcontinue`, `Images::getImageInfo()` sends its `li*` arguments as the `ii*` parameters
+of `prop=imageinfo` and takes the files to describe as its last argument, `$titles`, and
+`Search::search()` sends `$sroffest` as `sroffset`. `Search::openSearch()` calls
+`action=opensearch`; its `$format` argument is ignored, the response is always XML.
+
 ```php
 $mediawiki->pages->getPageInfo(['Main Page']);
 $mediawiki->pages->getPageContent(['Main Page']);

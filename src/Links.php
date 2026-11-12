@@ -105,7 +105,7 @@ class Links extends AbstractMediawikiObject
     public function getIWLinks(array $titles, $iwurl = false, $iwlimit = null, $iwcontinue = false, $iwprefix = null, $iwtitle = null, $iwdir = null)
     {
         // Build the request.
-        $path = '?action=query&prop=links';
+        $path = '?action=query&prop=iwlinks';
 
         // Append titles to the request.
         $path .= '&titles=' . $this->encodeParameter($titles);
@@ -263,7 +263,7 @@ class Links extends AbstractMediawikiObject
         $allimit = null
     ) {
         // Build the request.
-        $path = '?action=query&meta=siteinfo';
+        $path = '?action=query&list=alllinks';
 
         if ($alcontinue) {
             $path .= '&alcontinue=';

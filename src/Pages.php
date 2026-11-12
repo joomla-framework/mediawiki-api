@@ -587,7 +587,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($iwbllimit)) {
-            $path .= '&bllimit=' . $this->encodeParameter($iwbllimit);
+            $path .= '&iwbllimit=' . $this->encodeParameter($iwbllimit);
         }
 
         if (isset($iwblprop)) {

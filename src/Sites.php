@@ -202,7 +202,7 @@ class Sites extends AbstractMediawikiObject
         }
 
         if (isset($rcnamespace)) {
-            $path .= '&rcnamespaces=' . $this->encodeParameter($rcnamespace);
+            $path .= '&rcnamespace=' . $this->encodeParameter($rcnamespace);
         }
 
         if (isset($rcuser)) {

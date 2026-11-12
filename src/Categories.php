@@ -51,7 +51,7 @@ class Categories extends AbstractMediawikiObject
         }
 
         if (isset($clshow)) {
-            $path .= '&$clshow=' . $this->encodeParameter($clshow);
+            $path .= '&clshow=' . $this->encodeParameter($clshow);
         }
 
         if (isset($cllimit)) {
@@ -118,7 +118,7 @@ class Categories extends AbstractMediawikiObject
         $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($clcontinue) {
-            $path .= '&clcontinue=';
+            $path .= '&cicontinue=';
         }
 
         // Send the request.
@@ -292,10 +292,6 @@ class Categories extends AbstractMediawikiObject
 
         if (isset($acdir)) {
             $path .= '&acdir=' . $this->encodeParameter($acdir);
-        }
-
-        if (isset($acfrom)) {
-            $path .= '&acfrom=' . $this->encodeParameter($acfrom);
         }
 
         if (isset($acmin)) {

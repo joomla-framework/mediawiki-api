@@ -38,11 +38,11 @@ class Images extends AbstractMediawikiObject
         $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($imagelimit)) {
-            $path .= '&imagelimit=' . $this->encodeParameter($imagelimit);
+            $path .= '&imlimit=' . $this->encodeParameter($imagelimit);
         }
 
         if ($imagecontinue) {
-            $path .= '&imagecontinue=';
+            $path .= '&imcontinue=';
         }
 
         if (isset($imimages)) {
@@ -94,6 +94,7 @@ class Images extends AbstractMediawikiObject
      * @param   string    $limetadataversion  Version of metadata to use.
      * @param   string    $liurlparam         A handler specific parameter string.
      * @param   boolean   $licontinue         When more results are available, use this to continue.
+     * @param   ?array    $titles             The files to get information for, with the `File:` prefix.
      *
      * @return  object
      *
@@ -108,45 +109,50 @@ class Images extends AbstractMediawikiObject
         $liurlheight = null,
         $limetadataversion = null,
         $liurlparam = null,
-        $licontinue = null
+        $licontinue = null,
+        ?array $titles = null
     ) {
         // Build the request.
         $path = '?action=query&prop=imageinfo';
 
+        if (isset($titles)) {
+            $path .= '&titles=' . $this->encodeParameter($titles);
+        }
+
         if (isset($liprop)) {
-            $path .= '&liprop=' . $this->encodeParameter($liprop);
+            $path .= '&iiprop=' . $this->encodeParameter($liprop);
         }
 
         if (isset($lilimit)) {
-            $path .= '&lilimit=' . $this->encodeParameter($lilimit);
+            $path .= '&iilimit=' . $this->encodeParameter($lilimit);
         }
 
         if (isset($listart)) {
-            $path .= '&listart=' . $this->encodeParameter($listart);
+            $path .= '&iistart=' . $this->encodeParameter($listart);
         }
 
         if (isset($liend)) {
-            $path .= '&liend=' . $this->encodeParameter($liend);
+            $path .= '&iiend=' . $this->encodeParameter($liend);
         }
 
         if (isset($liurlwidth)) {
-            $path .= '&liurlwidth=' . $this->encodeParameter($liurlwidth);
+            $path .= '&iiurlwidth=' . $this->encodeParameter($liurlwidth);
         }
 
         if (isset($liurlheight)) {
-            $path .= '&liurlheight=' . $this->encodeParameter($liurlheight);
+            $path .= '&iiurlheight=' . $this->encodeParameter($liurlheight);
         }
 
         if (isset($limetadataversion)) {
-            $path .= '&limetadataversion=' . $this->encodeParameter($limetadataversion);
+            $path .= '&iimetadataversion=' . $this->encodeParameter($limetadataversion);
         }
 
         if (isset($liurlparam)) {
-            $path .= '&liurlparam=' . $this->encodeParameter($liurlparam);
+            $path .= '&iiurlparam=' . $this->encodeParameter($liurlparam);
         }
 
         if ($licontinue) {
-            $path .= '&alcontinue=';
+            $path .= '&iicontinue=';
         }
 
         // Send the request.
@@ -223,7 +229,7 @@ class Images extends AbstractMediawikiObject
         }
 
         if (isset($aisha1base36)) {
-            $path .= '&$aisha1base36=' . $this->encodeParameter($aisha1base36);
+            $path .= '&aisha1base36=' . $this->encodeParameter($aisha1base36);
         }
 
         if (isset($aiprop)) {

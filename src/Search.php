@@ -68,7 +68,7 @@ class Search extends AbstractMediawikiObject
         }
 
         if (isset($sroffest)) {
-            $path .= '&sroffest=' . $this->encodeParameter($sroffest);
+            $path .= '&sroffset=' . $this->encodeParameter($sroffest);
         }
 
         if (isset($srlimit)) {
@@ -88,7 +88,7 @@ class Search extends AbstractMediawikiObject
      * @param   integer  $limit      Maximum amount of results to return.
      * @param   ?array   $namespace  Namespaces to search.
      * @param   string   $suggest    Do nothing if $wgEnableOpenSearchSuggest is false.
-     * @param   string   $format     Output format.
+     * @param   string   $format     Unused. The response is always requested as XML.
      *
      * @return  object
      *
@@ -97,7 +97,7 @@ class Search extends AbstractMediawikiObject
     public function openSearch($search, $limit = null, array $namespace = null, $suggest = null, $format = null)
     {
         // Build the request.
-        $path = '?action=query&list=search';
+        $path = '?action=opensearch';
 
         $path .= '&search=' . $this->encodeParameter($search);
 
@@ -111,10 +111,6 @@ class Search extends AbstractMediawikiObject
 
         if (isset($suggest)) {
             $path .= '&suggest=' . $this->encodeParameter($suggest);
-        }
-
-        if (isset($format)) {
-            $path .= '&format=' . $this->encodeParameter($format);
         }
 
         // Send the request.
