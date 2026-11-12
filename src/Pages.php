@@ -42,7 +42,7 @@ class Pages extends AbstractMediawikiObject
             'title'        => $title,
             'token'        => $token,
             'section'      => $section,
-            'sectiontitle' => $section,
+            'sectiontitle' => $sectiontitle,
             'text'         => $text,
             'summary'      => $summary,
         ];
@@ -193,7 +193,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'from'           => $from,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -244,7 +244,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'fromid'         => $fromid,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -286,7 +286,7 @@ class Pages extends AbstractMediawikiObject
             'title'     => $title,
             'token'     => $token,
             'user'      => $user,
-            'expiry'    => $summary,
+            'summary'   => $summary,
             'markbot'   => $markbot,
             'watchlist' => $watchlist,
         ];
@@ -314,7 +314,7 @@ class Pages extends AbstractMediawikiObject
     public function changeProtection($title, $protections, $expiry = null, $reason = null, $cascade = null, $watchlist = null)
     {
         // Get the token.
-        $token = $this->getToken($title, 'unblock');
+        $token = $this->getToken($title, 'protect');
 
         // Build the request path.
         $path = '?action=protect';

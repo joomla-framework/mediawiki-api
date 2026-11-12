@@ -137,4 +137,229 @@ class UsersTest extends TestCase
             $this->equalTo(simplexml_load_string($this->sampleString))
         );
     }
+
+    /**
+     * Build a response object carrying the given XML.
+     *
+     * @param   string   $xml   The body.
+     * @param   integer  $code  The status code.
+     *
+     * @return  Response
+     */
+    protected function xmlResponse(string $xml, int $code = 200): Response
+    {
+        return new Response('data://text/plain,' . $xml, $code);
+    }
+
+    /**
+     * Expect a token request followed by the write request, and capture the posted data.
+     *
+     * @param   string  $expectedPath  The path the write request must use.
+     * @param   array   &$captured     Filled with the data posted by the write request.
+     *
+     * @return  void
+     */
+    protected function expectTokenThenPost(string $expectedPath, ?array &$captured): void
+    {
+        $tokenResponse = $this->xmlResponse(
+            '<a><query><pages><page blocktoken="BLOCKTOKEN" unblocktoken="UNBLOCKTOKEN" '
+            . 'userrightstoken="RIGHTSTOKEN" emailtoken="EMAILTOKEN"></page></pages></query></a>'
+        );
+        $writeResponse = $this->response;
+
+        $this->client->expects($this->exactly(2))
+            ->method('post')
+            ->willReturnCallback(
+                function ($url, $data) use ($expectedPath, &$captured, $tokenResponse, $writeResponse) {
+                    if (str_contains($url, 'intoken=')) {
+                        return $tokenResponse;
+                    }
+
+                    $this->assertSame($expectedPath, $url);
+                    $captured = $data;
+
+                    return $writeResponse;
+                }
+            );
+    }
+
+    /**
+     * Tests that getUserInfo sends usprop as a proper key/value pair
+     *
+     * @return void
+     */
+    public function testGetUserInfoWithProperties()
+    {
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with('/api.php?action=query&list=users&ususers=Joomla&usprop=blockinfo|groups&format=xml')
+            ->willReturn($this->response);
+
+        $this->assertThat(
+            $this->object->getUserInfo(['Joomla'], ['blockinfo', 'groups']),
+            $this->equalTo(simplexml_load_string($this->sampleString))
+        );
+    }
+
+    /**
+     * Tests that getCurrentUserInfo sends uiprop as a proper key/value pair
+     *
+     * @return void
+     */
+    public function testGetCurrentUserInfoWithProperties()
+    {
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with('/api.php?action=query&meta=userinfo&uiprop=rights|groups&format=xml')
+            ->willReturn($this->response);
+
+        $this->assertThat(
+            $this->object->getCurrentUserInfo(['rights', 'groups']),
+            $this->equalTo(simplexml_load_string($this->sampleString))
+        );
+    }
+
+    /**
+     * Tests that logout calls action=logout rather than action=login
+     *
+     * @return void
+     */
+    public function testLogoutCallsTheLogoutAction()
+    {
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with('/api.php?action=logout&format=xml')
+            ->willReturn($this->response);
+
+        $this->assertThat(
+            $this->object->logout(),
+            $this->equalTo(simplexml_load_string($this->sampleString))
+        );
+    }
+
+    /**
+     * Tests that blockUser calls action=block rather than action=unblock
+     *
+     * @return void
+     */
+    public function testBlockUserCallsTheBlockAction()
+    {
+        $captured = null;
+        $this->expectTokenThenPost('/api.php?action=block&format=xml', $captured);
+
+        $this->object->blockUser('Vandal', 'never', 'Persistent vandalism', null, null, null, null, null, true);
+
+        $this->assertSame('Vandal', $captured['user']);
+        $this->assertSame('BLOCKTOKEN', $captured['token']);
+        $this->assertSame('never', $captured['expiry']);
+        $this->assertSame('Persistent vandalism', $captured['reason']);
+        $this->assertSame(
+            true,
+            $captured['allowusertalk'],
+            'The MediaWiki parameter is allowusertalk, not allowusetalk'
+        );
+    }
+
+    /**
+     * Tests the unBlockUserByName method
+     *
+     * @return void
+     */
+    public function testUnBlockUserByName()
+    {
+        $captured = null;
+        $this->expectTokenThenPost('/api.php?action=unblock&format=xml', $captured);
+
+        $this->object->unBlockUserByName('Vandal', 'Appeal accepted');
+
+        $this->assertSame('Vandal', $captured['user']);
+        $this->assertSame('Appeal accepted', $captured['reason']);
+        $this->assertSame('UNBLOCKTOKEN', $captured['token']);
+    }
+
+    /**
+     * Tests the unBlockUserByID method
+     *
+     * @return void
+     */
+    public function testUnBlockUserById()
+    {
+        $captured = null;
+        $this->expectTokenThenPost('/api.php?action=unblock&format=xml', $captured);
+
+        $this->object->unBlockUserByID(42, 'Appeal accepted');
+
+        $this->assertSame(42, $captured['id']);
+        $this->assertSame('Appeal accepted', $captured['reason']);
+    }
+
+    /**
+     * Tests the assignGroup method
+     *
+     * @return void
+     */
+    public function testAssignGroup()
+    {
+        $captured = null;
+        $this->expectTokenThenPost('/api.php?action=userrights&format=xml', $captured);
+
+        $this->object->assignGroup('Editor', 'sysop', 'bot', 'Promotion');
+
+        $this->assertSame('Editor', $captured['user']);
+        $this->assertSame('sysop', $captured['add']);
+        $this->assertSame('bot', $captured['remove']);
+        $this->assertSame('Promotion', $captured['reason']);
+    }
+
+    /**
+     * Tests the emailUser method
+     *
+     * @return void
+     */
+    public function testEmailUser()
+    {
+        $captured = null;
+        $this->expectTokenThenPost('/api.php?action=emailuser&format=xml', $captured);
+
+        $this->object->emailUser('Editor', 'Hello', 'Message body', true);
+
+        $this->assertSame('Editor', $captured['target']);
+        $this->assertSame('Hello', $captured['subject']);
+        $this->assertSame('Message body', $captured['text']);
+        $this->assertSame(true, $captured['ccme']);
+    }
+
+    /**
+     * Tests the getUserContribs method with its optional parameters
+     *
+     * @return void
+     */
+    public function testGetUserContribsWithOptions()
+    {
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with('/api.php?action=query&list=usercontribs&ucuser=Joomla&uclimit=10&ucdir=older&ucprop=ids|title&format=xml')
+            ->willReturn($this->response);
+
+        $this->assertThat(
+            $this->object->getUserContribs('Joomla', null, 10, null, null, null, 'older', null, ['ids', 'title']),
+            $this->equalTo(simplexml_load_string($this->sampleString))
+        );
+    }
+
+    /**
+     * Tests that an API error response raises a DomainException
+     *
+     * @return void
+     */
+    public function testAnErrorResponseRaisesADomainException()
+    {
+        $this->client->expects($this->once())
+            ->method('get')
+            ->willReturn($this->xmlResponse('<a><error code="baduser" info="Bad user"></error></a>'));
+
+        $this->expectException(\DomainException::class);
+
+        $this->object->getUserInfo(['Joomla']);
+    }
 }
