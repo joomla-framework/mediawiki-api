@@ -75,17 +75,18 @@ The session cookies the wiki sets are stored in the `Cookie` entry of the HTTP c
 option. `Mediawiki` hands the same client to every endpoint object, so all later requests made
 through it are authenticated. Cookies already configured there are kept.
 
-`api.username` and `api.password` in the options are a different matter:
-`AbstractMediawikiObject::fetchUrl()` writes them into the URL's userinfo, so they become part of
-the URL string.
+`api.username` and `api.password` in the options are a different matter: they are credentials for
+HTTP authentication in front of the wiki (for example a password-protected staging server), not
+a wiki account. They are sent as an HTTP Basic `Authorization` header, which the client stores in
+its `headers` option; they are never written into the URL.
 
 ## Options
 
 | Option | Meaning |
 |---|---|
 | `api.url` | The wiki's script path, e.g. `https://en.wikipedia.org/w` |
-| `api.username` | Optional HTTP-level user |
-| `api.password` | Optional HTTP-level password |
+| `api.username` | Optional user for HTTP Basic authentication in front of the wiki |
+| `api.password` | Optional password for HTTP Basic authentication; only used with `api.username` |
 
 Options are a `Joomla\Registry\Registry`. A second constructor argument accepts a
 `Joomla\Mediawiki\Http` instance if you want to configure the transport.

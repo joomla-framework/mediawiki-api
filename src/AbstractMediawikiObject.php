@@ -47,7 +47,9 @@ abstract class AbstractMediawikiObject
     }
 
     /**
-     * Method to build and return a full request URL for the request.
+     * Method to build and return a full request URL for the request. When `api.username` is set,
+     * this also sets the `Authorization` header (HTTP Basic, with `api.password`) in the `headers`
+     * option of the HTTP client.
      *
      * @param   string  $path  URL to inflect
      *
@@ -62,12 +64,15 @@ abstract class AbstractMediawikiObject
 
         $uri = new Uri($this->options->get('api.url') . '/api.php' . $path);
 
+        // HTTP credentials are sent as a header, never as part of the URL.
         if ($this->options->get('api.username', false)) {
-            $uri->setUser($this->options->get('api.username'));
-        }
+            $headers = (array) $this->client->getOption('headers', []);
 
-        if ($this->options->get('api.password', false)) {
-            $uri->setPass($this->options->get('api.password'));
+            $headers['Authorization'] = 'Basic ' . base64_encode(
+                $this->options->get('api.username') . ':' . $this->options->get('api.password', '')
+            );
+
+            $this->client->setOption('headers', $headers);
         }
 
         return (string) $uri;
