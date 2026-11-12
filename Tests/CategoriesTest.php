@@ -91,7 +91,7 @@ class CategoriesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=categories&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=categories&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -111,7 +111,7 @@ class CategoriesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&generator=categories&prop=info&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&generator=categories&prop=info&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -131,7 +131,7 @@ class CategoriesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=categoryinfo&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=categoryinfo&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -151,7 +151,7 @@ class CategoriesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&list=categorymembers&cmtitle=Category:Help&format=xml')
+            ->with('/api.php?action=query&list=categorymembers&cmtitle=Category%3AHelp&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(

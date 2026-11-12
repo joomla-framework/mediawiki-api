@@ -44,18 +44,18 @@ class Categories extends AbstractMediawikiObject
         $path = '?action=query&prop=categories';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($clprop)) {
-            $path .= '&clprop=' . $this->buildParameter($clprop);
+            $path .= '&clprop=' . $this->encodeParameter($clprop);
         }
 
         if (isset($clshow)) {
-            $path .= '&$clshow=' . $this->buildParameter($clshow);
+            $path .= '&clshow=' . $this->encodeParameter($clshow);
         }
 
         if (isset($cllimit)) {
-            $path .= '&cllimit=' . $cllimit;
+            $path .= '&cllimit=' . $this->encodeParameter($cllimit);
         }
 
         if ($clcontinue) {
@@ -63,11 +63,11 @@ class Categories extends AbstractMediawikiObject
         }
 
         if (isset($clcategories)) {
-            $path .= '&clcategories=' . $this->buildParameter($clcategories);
+            $path .= '&clcategories=' . $this->encodeParameter($clcategories);
         }
 
         if (isset($cldir)) {
-            $path .= '&cldir=' . $cldir;
+            $path .= '&cldir=' . $this->encodeParameter($cldir);
         }
 
         // Send the request.
@@ -91,7 +91,7 @@ class Categories extends AbstractMediawikiObject
         $path = '?action=query&generator=categories&prop=info';
 
         // Append titles to the request
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         // Send the request.
         $response = $this->client->get($this->fetchUrl($path));
@@ -115,10 +115,10 @@ class Categories extends AbstractMediawikiObject
         $path = '?action=query&prop=categoryinfo';
 
         // Append titles to the request
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($clcontinue) {
-            $path .= '&clcontinue=';
+            $path .= '&cicontinue=';
         }
 
         // Send the request.
@@ -184,63 +184,63 @@ class Categories extends AbstractMediawikiObject
                 throw new \RuntimeException('The $cmtitle parameter must include the Category: prefix.');
             }
 
-            $path .= '&cmtitle=' . $cmtitle;
+            $path .= '&cmtitle=' . $this->encodeParameter($cmtitle);
         }
 
         if (isset($cmpageid)) {
-            $path .= '&cmpageid=' . $cmpageid;
+            $path .= '&cmpageid=' . $this->encodeParameter($cmpageid);
         }
 
         if (isset($cmlimit)) {
-            $path .= '&cmlimit=' . $cmlimit;
+            $path .= '&cmlimit=' . $this->encodeParameter($cmlimit);
         }
 
         if (isset($cmprop)) {
-            $path .= '&cmprop=' . $this->buildParameter($cmprop);
+            $path .= '&cmprop=' . $this->encodeParameter($cmprop);
         }
 
         if (isset($cmnamespace)) {
-            $path .= '&cmnamespace=' . $this->buildParameter($cmnamespace);
+            $path .= '&cmnamespace=' . $this->encodeParameter($cmnamespace);
         }
 
         if (isset($cmtype)) {
-            $path .= '&cmtype=' . $this->buildParameter($cmtype);
+            $path .= '&cmtype=' . $this->encodeParameter($cmtype);
         }
 
         if (isset($cmstart)) {
-            $path .= '&cmstart=' . $cmstart;
+            $path .= '&cmstart=' . $this->encodeParameter($cmstart);
         }
 
         if (isset($cmend)) {
-            $path .= '&cmend=' . $cmend;
+            $path .= '&cmend=' . $this->encodeParameter($cmend);
         }
 
         if (isset($cmstartsortkey)) {
-            $path .= '&cmstartsortkey=' . $cmstartsortkey;
+            $path .= '&cmstartsortkey=' . $this->encodeParameter($cmstartsortkey);
         }
 
         if (isset($cmendsortkey)) {
-            $path .= '&cmendsortkey=' . $cmendsortkey;
+            $path .= '&cmendsortkey=' . $this->encodeParameter($cmendsortkey);
         }
 
         if (isset($cmstartsortkeyprefix)) {
-            $path .= '&cmstartsortkeyprefix=' . $cmstartsortkeyprefix;
+            $path .= '&cmstartsortkeyprefix=' . $this->encodeParameter($cmstartsortkeyprefix);
         }
 
         if (isset($cmendsortkeyprefix)) {
-            $path .= '&cmendsortkeyprefix=' . $cmendsortkeyprefix;
+            $path .= '&cmendsortkeyprefix=' . $this->encodeParameter($cmendsortkeyprefix);
         }
 
         if (isset($cmsort)) {
-            $path .= '&cmsort=' . $cmsort;
+            $path .= '&cmsort=' . $this->encodeParameter($cmsort);
         }
 
         if (isset($cmdir)) {
-            $path .= '&cmdir=' . $cmdir;
+            $path .= '&cmdir=' . $this->encodeParameter($cmdir);
         }
 
         if (isset($cmcontinue)) {
-            $path .= '&cmcontinue=' . $cmcontinue;
+            $path .= '&cmcontinue=' . $this->encodeParameter($cmcontinue);
         }
 
         // Send the request.
@@ -279,39 +279,35 @@ class Categories extends AbstractMediawikiObject
         $path = '?action=query&list=allcategories';
 
         if (isset($acfrom)) {
-            $path .= '&acfrom=' . $acfrom;
+            $path .= '&acfrom=' . $this->encodeParameter($acfrom);
         }
 
         if (isset($acto)) {
-            $path .= '&acto=' . $acto;
+            $path .= '&acto=' . $this->encodeParameter($acto);
         }
 
         if (isset($acprefix)) {
-            $path .= '&acprefix=' . $acprefix;
+            $path .= '&acprefix=' . $this->encodeParameter($acprefix);
         }
 
         if (isset($acdir)) {
-            $path .= '&acdir=' . $acdir;
-        }
-
-        if (isset($acfrom)) {
-            $path .= '&acfrom=' . $acfrom;
+            $path .= '&acdir=' . $this->encodeParameter($acdir);
         }
 
         if (isset($acmin)) {
-            $path .= '&acmin=' . $acmin;
+            $path .= '&acmin=' . $this->encodeParameter($acmin);
         }
 
         if (isset($acmax)) {
-            $path .= '&acmax=' . $acmax;
+            $path .= '&acmax=' . $this->encodeParameter($acmax);
         }
 
         if (isset($aclimit)) {
-            $path .= '&aclimit=' . $aclimit;
+            $path .= '&aclimit=' . $this->encodeParameter($aclimit);
         }
 
         if (isset($acprop)) {
-            $path .= '&acprop=' . $this->buildParameter($acprop);
+            $path .= '&acprop=' . $this->encodeParameter($acprop);
         }
 
         // Send the request.
@@ -336,11 +332,11 @@ class Categories extends AbstractMediawikiObject
         $path = '?action=query&list=tags';
 
         if (isset($tgprop)) {
-            $path .= '&tgprop=' . $this->buildParameter($tgprop);
+            $path .= '&tgprop=' . $this->encodeParameter($tgprop);
         }
 
         if (isset($tglimit)) {
-            $path .= '&tglimit=' . $tglimit;
+            $path .= '&tglimit=' . $this->encodeParameter($tglimit);
         }
 
         // @todo add support for $tgcontinue

@@ -77,7 +77,7 @@ class Users extends AbstractMediawikiObject
     public function logout()
     {
         // Build the request path.
-        $path = '?action=login';
+        $path = '?action=logout';
 
         // @todo clear internal data as well
 
@@ -103,10 +103,10 @@ class Users extends AbstractMediawikiObject
         $path = '?action=query&list=users';
 
         // Append users to the request.
-        $path .= '&ususers=' . $this->buildParameter($ususers);
+        $path .= '&ususers=' . $this->encodeParameter($ususers);
 
         if (isset($usprop)) {
-            $path .= '&usprop' . $this->buildParameter($usprop);
+            $path .= '&usprop=' . $this->encodeParameter($usprop);
         }
 
         // Send the request.
@@ -130,7 +130,7 @@ class Users extends AbstractMediawikiObject
         $path = '?action=query&meta=userinfo';
 
         if (isset($uiprop)) {
-            $path .= '&uiprop' . $this->buildParameter($uiprop);
+            $path .= '&uiprop=' . $this->encodeParameter($uiprop);
         }
 
         // Send the request.
@@ -177,23 +177,23 @@ class Users extends AbstractMediawikiObject
         $path = '?action=query&list=usercontribs';
 
         if (isset($ucuser)) {
-            $path .= '&ucuser=' . $ucuser;
+            $path .= '&ucuser=' . $this->encodeParameter($ucuser);
         }
 
         if (isset($ucuserprefix)) {
-            $path .= '&ucuserprefix=' . $ucuserprefix;
+            $path .= '&ucuserprefix=' . $this->encodeParameter($ucuserprefix);
         }
 
         if (isset($uclimit)) {
-            $path .= '&uclimit=' . $uclimit;
+            $path .= '&uclimit=' . $this->encodeParameter($uclimit);
         }
 
         if (isset($ucstart)) {
-            $path .= '&ucstart=' . $ucstart;
+            $path .= '&ucstart=' . $this->encodeParameter($ucstart);
         }
 
         if (isset($ucend)) {
-            $path .= '&ucend=' . $ucend;
+            $path .= '&ucend=' . $this->encodeParameter($ucend);
         }
 
         if ($uccontinue) {
@@ -201,27 +201,27 @@ class Users extends AbstractMediawikiObject
         }
 
         if (isset($ucdir)) {
-            $path .= '&ucdir=' . $ucdir;
+            $path .= '&ucdir=' . $this->encodeParameter($ucdir);
         }
 
         if (isset($ucnamespace)) {
-            $path .= '&ucnamespace=' . $this->buildParameter($ucnamespace);
+            $path .= '&ucnamespace=' . $this->encodeParameter($ucnamespace);
         }
 
         if (isset($ucprop)) {
-            $path .= '&ucprop=' . $this->buildParameter($ucprop);
+            $path .= '&ucprop=' . $this->encodeParameter($ucprop);
         }
 
         if (isset($ucshow)) {
-            $path .= '&ucshow=' . $this->buildParameter($ucshow);
+            $path .= '&ucshow=' . $this->encodeParameter($ucshow);
         }
 
         if (isset($uctag)) {
-            $path .= '&uctag=' . $uctag;
+            $path .= '&uctag=' . $this->encodeParameter($uctag);
         }
 
         if (isset($uctoponly)) {
-            $path .= '&uctoponly=' . $uctoponly;
+            $path .= '&uctoponly=' . $this->encodeParameter($uctoponly);
         }
 
         // Send the request.
@@ -266,22 +266,22 @@ class Users extends AbstractMediawikiObject
         $token = $this->getToken($user, 'block');
 
         // Build the request path.
-        $path = '?action=unblock';
+        $path = '?action=block';
 
         // Build the request data.
         $data = [
-            'user'         => $user,
-            'token'        => $token,
-            'expiry'       => $expiry,
-            'reason'       => $reason,
-            'anononly'     => $anononly,
-            'nocreate'     => $nocreate,
-            'autoblock'    => $autoblock,
-            'noemail'      => $noemail,
-            'hidename'     => $hidename,
-            'allowusetalk' => $allowusertalk,
-            'reblock'      => $reblock,
-            'watchuser'    => $watchuser,
+            'user'          => $user,
+            'token'         => $token,
+            'expiry'        => $expiry,
+            'reason'        => $reason,
+            'anononly'      => $anononly,
+            'nocreate'      => $nocreate,
+            'autoblock'     => $autoblock,
+            'noemail'       => $noemail,
+            'hidename'      => $hidename,
+            'allowusertalk' => $allowusertalk,
+            'reblock'       => $reblock,
+            'watchuser'     => $watchuser,
         ];
 
         // Send the request.
@@ -367,18 +367,18 @@ class Users extends AbstractMediawikiObject
     public function assignGroup($username, $add = null, $remove = null, $reason = null)
     {
         // Get the token.
-        $token = $this->getToken($username, 'unblock');
+        $token = $this->getToken($username, 'userrights');
 
         // Build the request path.
         $path = '?action=userrights';
 
         // Build the request data.
         $data = [
-            'username' => $username,
-            'token'    => $token,
-            'add'      => $add,
-            'remove'   => $remove,
-            'reason'   => $reason,
+            'user'   => $username,
+            'token'  => $token,
+            'add'    => $add,
+            'remove' => $remove,
+            'reason' => $reason,
         ];
 
         // Send the request.
@@ -435,7 +435,7 @@ class Users extends AbstractMediawikiObject
     public function getToken($user, $intoken)
     {
         // Build the request path.
-        $path = '?action=query&prop=info&intoken=' . $intoken . '&titles=User:' . $user;
+        $path = '?action=query&prop=info&intoken=' . $this->encodeParameter($intoken) . '&titles=User:' . $this->encodeParameter($user);
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), null);

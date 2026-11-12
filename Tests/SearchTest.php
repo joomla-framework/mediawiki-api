@@ -108,7 +108,7 @@ class SearchTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&list=search&search=test&format=xml')
+            ->with('/api.php?action=opensearch&search=test&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(

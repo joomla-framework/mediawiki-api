@@ -45,22 +45,22 @@ class Search extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=search';
 
-        $path .= '&srsearch=' . $srsearch;
+        $path .= '&srsearch=' . $this->encodeParameter($srsearch);
 
         if (isset($srnamespace)) {
-            $path .= '&srnamespace=' . $this->buildParameter($srnamespace);
+            $path .= '&srnamespace=' . $this->encodeParameter($srnamespace);
         }
 
         if (isset($srwhat)) {
-            $path .= '&srwhat=' . $srwhat;
+            $path .= '&srwhat=' . $this->encodeParameter($srwhat);
         }
 
         if (isset($srinfo)) {
-            $path .= '&srinfo=' . $this->buildParameter($srinfo);
+            $path .= '&srinfo=' . $this->encodeParameter($srinfo);
         }
 
         if (isset($srprop)) {
-            $path .= '&srprop=' . $this->buildParameter($srprop);
+            $path .= '&srprop=' . $this->encodeParameter($srprop);
         }
 
         if ($srredirects) {
@@ -68,11 +68,11 @@ class Search extends AbstractMediawikiObject
         }
 
         if (isset($sroffest)) {
-            $path .= '&sroffest=' . $sroffest;
+            $path .= '&sroffset=' . $this->encodeParameter($sroffest);
         }
 
         if (isset($srlimit)) {
-            $path .= '&srlimit=' . $srlimit;
+            $path .= '&srlimit=' . $this->encodeParameter($srlimit);
         }
 
         // Send the request.
@@ -88,7 +88,7 @@ class Search extends AbstractMediawikiObject
      * @param   integer  $limit      Maximum amount of results to return.
      * @param   ?array   $namespace  Namespaces to search.
      * @param   string   $suggest    Do nothing if $wgEnableOpenSearchSuggest is false.
-     * @param   string   $format     Output format.
+     * @param   string   $format     Unused. The response is always requested as XML.
      *
      * @return  object
      *
@@ -97,24 +97,20 @@ class Search extends AbstractMediawikiObject
     public function openSearch($search, $limit = null, array $namespace = null, $suggest = null, $format = null)
     {
         // Build the request.
-        $path = '?action=query&list=search';
+        $path = '?action=opensearch';
 
-        $path .= '&search=' . $search;
+        $path .= '&search=' . $this->encodeParameter($search);
 
         if (isset($limit)) {
-            $path .= '&limit=' . $limit;
+            $path .= '&limit=' . $this->encodeParameter($limit);
         }
 
         if (isset($namespace)) {
-            $path .= '&namespace=' . $this->buildParameter($namespace);
+            $path .= '&namespace=' . $this->encodeParameter($namespace);
         }
 
         if (isset($suggest)) {
-            $path .= '&suggest=' . $suggest;
-        }
-
-        if (isset($format)) {
-            $path .= '&format=' . $format;
+            $path .= '&suggest=' . $this->encodeParameter($suggest);
         }
 
         // Send the request.
