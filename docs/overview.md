@@ -88,7 +88,10 @@ the URL string as well.
 | `api.password` | Optional HTTP-level password |
 
 Options are a `Joomla\Registry\Registry`. A second constructor argument accepts a
-`Joomla\Mediawiki\Http` instance if you want to configure the transport.
+`Joomla\Mediawiki\Http` instance if you want to configure the transport. That client sends boolean
+flags the way MediaWiki expects them: MediaWiki treats a flag such as `hidename`, `nocreate` or
+`noredirect` as set whenever it is present, whatever its value, so `post()` leaves out `false` and
+`null` values and sends `true` as `1`. `0`, `'0'` and `''` are sent as they are.
 
 ## Things to know before you build on this
 

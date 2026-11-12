@@ -10,7 +10,9 @@
 namespace Joomla\Mediawiki;
 
 use Joomla\Http\Http as BaseHttp;
+use Joomla\Http\Response;
 use Joomla\Http\TransportInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * HTTP client class for connecting to a MediaWiki instance.
@@ -40,5 +42,32 @@ class Http extends BaseHttp
         if (!isset($this->options['timeout'])) {
             $this->options['timeout'] = 120;
         }
+    }
+
+    /**
+     * Method to send the POST command to the server.
+     *
+     * MediaWiki treats a boolean parameter as true whenever it is present, whatever its value. In an
+     * array of data, `false` and `null` values are therefore left out and `true` is sent as `1`.
+     *
+     * @param   string|UriInterface  $url      The URI to the resource to request.
+     * @param   mixed                $data     Either an associative array or a string to be sent with the request.
+     * @param   array                $headers  An array of request headers to send with the request.
+     * @param   integer              $timeout  Read timeout in seconds.
+     *
+     * @return  Response
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function post($url, $data, array $headers = [], $timeout = null)
+    {
+        if (\is_array($data)) {
+            $data = array_map(
+                static fn ($value) => $value === true ? '1' : $value,
+                array_filter($data, static fn ($value) => $value !== false && $value !== null)
+            );
+        }
+
+        return parent::post($url, $data, $headers, $timeout);
     }
 }
