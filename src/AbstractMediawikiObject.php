@@ -10,6 +10,9 @@
 namespace Joomla\Mediawiki;
 
 use Joomla\Http\Response;
+use Joomla\Mediawiki\Exception\ApiErrorException;
+use Joomla\Mediawiki\Exception\ApiWarningException;
+use Joomla\Mediawiki\Exception\UnexpectedResponseException;
 use Joomla\Registry\Registry;
 use Joomla\Uri\Uri;
 
@@ -100,23 +103,50 @@ abstract class AbstractMediawikiObject
     /**
      * Method to validate response for errors
      *
+     * The body is parsed without network access and without emitting PHP warnings. All exceptions
+     * thrown extend `\DomainException`.
+     *
      * @param   Response  $response  The response from the mediawiki server.
      *
      * @return  \SimpleXMLElement
      *
      * @since   1.0
-     * @throws  \DomainException
+     * @throws  UnexpectedResponseException  When the body is not valid XML or the HTTP status is 400 or higher.
+     * @throws  ApiErrorException            When the API reports an error.
+     * @throws  ApiWarningException          When the API reports warnings and `api.throwOnWarnings` is enabled (default).
      */
     public function validateResponse(Response $response)
     {
-        $xml = simplexml_load_string((string) $response->getBody());
+        $status = $response->getStatusCode();
 
-        if (isset($xml->warnings)) {
-            throw new \DomainException($xml->warnings->info);
+        $useInternalErrors = libxml_use_internal_errors(true);
+        $xml               = simplexml_load_string((string) $response->getBody(), \SimpleXMLElement::class, \LIBXML_NONET);
+        libxml_clear_errors();
+        libxml_use_internal_errors($useInternalErrors);
+
+        if ($xml === false) {
+            throw new UnexpectedResponseException(
+                \sprintf('The MediaWiki API returned a response that is not valid XML (HTTP status %d).', $status),
+                $status
+            );
         }
 
         if (isset($xml->error)) {
-            throw new \DomainException($xml->error['info']);
+            throw new ApiErrorException((string) $xml->error['code'], (string) $xml->error['info']);
+        }
+
+        if ($status >= 400) {
+            throw new UnexpectedResponseException(\sprintf('The MediaWiki API returned HTTP status %d.', $status), $status);
+        }
+
+        if (isset($xml->warnings) && $this->options->get('api.throwOnWarnings', true)) {
+            $warnings = [];
+
+            foreach ($xml->warnings->children() as $module => $warning) {
+                $warnings[] = $module . ': ' . trim((string) $warning);
+            }
+
+            throw new ApiWarningException($warnings);
         }
 
         return $xml;

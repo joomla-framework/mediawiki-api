@@ -50,8 +50,9 @@ $mediawiki->sites->getSiteInfo();
 ```
 
 Every method returns a `SimpleXMLElement` — the client requests `format=xml` and parses the
-response with `validateResponse()`, which raises a `DomainException` when the API reports an error
-or a warning.
+response with `validateResponse()`, which throws an exception when the response is not valid XML,
+when the HTTP status is 400 or higher, or when the API reports an error or a warning (see
+"Errors and warnings" below).
 
 ## Authenticating
 
@@ -101,10 +102,8 @@ in:
 $mediawiki->pages->getPageInfo([rawurlencode($title)]);
 ```
 
-**The XML parser is not hardened.** `validateResponse()` calls `simplexml_load_string()` without
-`LIBXML_NONET`, without internal error handling, and without checking the return value. On invalid
-XML it returns `false`, which the caller then treats as a `SimpleXMLElement`. Point the client only
-at wikis you trust.
+**The XML parser runs without network access.** `validateResponse()` parses with `LIBXML_NONET`
+and collects libxml errors internally instead of emitting PHP warnings.
 
 **The response format is fixed to XML.** `fetchUrl()` appends `format=xml` unconditionally.
 MediaWiki has treated XML as deprecated in favour of JSON for years, so expect it to receive less
@@ -123,6 +122,17 @@ form, but not for normal accounts on a current wiki.
 the Wikimedia projects expect from automated clients — has no backoff, and does not follow the
 `continue` token, so paginated queries have to be looped by the caller.
 
-**Errors are all `DomainException`.** The MediaWiki error code (`badtoken`, `ratelimited`,
-`permissiondenied`, `readonly`) is not preserved in a form you can branch on; only the message text
-is. That message comes from the remote server, so escape it before displaying it.
+**Errors and warnings.** All exceptions thrown by `validateResponse()` extend `DomainException`,
+so existing `catch (\DomainException $e)` blocks keep working:
+
+| Exception | Thrown when | Extra |
+|---|---|---|
+| `Joomla\Mediawiki\Exception\UnexpectedResponseException` | The body is not valid XML (an HTML error page, a proxy page), or the HTTP status is 400 or higher | The exception code is the HTTP status |
+| `Joomla\Mediawiki\Exception\ApiErrorException` | The API reports an error | `getApiCode()` returns the MediaWiki error code (`badtoken`, `ratelimited`, `maxlag`, `permissiondenied`, `readonly`, …) to branch on |
+| `Joomla\Mediawiki\Exception\ApiWarningException` | The API reports warnings | `getWarnings()` returns every warning as `module: text` |
+
+Warnings — for example deprecation notices — do not mean that the request failed. Set the option
+`api.throwOnWarnings` to `false` to get the result instead; the warnings stay in its `warnings`
+element. The default, `true`, keeps the earlier behaviour.
+
+The messages come from the remote server, so escape them before displaying them.
