@@ -348,7 +348,7 @@ class Pages extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getPageInfo(array $titles, array $inprop = null, array $intoken = null, $incontinue = null)
+    public function getPageInfo(array $titles, ?array $inprop = null, ?array $intoken = null, $incontinue = null)
     {
         // Build the request
         $path = '?action=query&prop=info';
@@ -419,7 +419,7 @@ class Pages extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getRevisions(array $titles, array $rvprop = null, $rvparse = null, $rvlimit = null)
+    public function getRevisions(array $titles, ?array $rvprop = null, $rvparse = null, $rvlimit = null)
     {
         // Build the request
         $path = '?action=query&prop=revisions';
@@ -461,7 +461,7 @@ class Pages extends AbstractMediawikiObject
      */
     public function getPageTemplates(
         array $titles,
-        array $tlnamespace = null,
+        ?array $tlnamespace = null,
         $tllimit = null,
         $tlcontinue = null,
         $tltemplates = null,
@@ -518,7 +518,7 @@ class Pages extends AbstractMediawikiObject
         $bltitle,
         $blpageid = null,
         $blcontinue = null,
-        array $blnamespace = null,
+        ?array $blnamespace = null,
         $blfilterredirect = null,
         $bllimit = null,
         $blredirect = null
@@ -571,7 +571,7 @@ class Pages extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getIWBackLinks($iwbltitle, $iwblprefix = null, $iwblcontinue = null, $iwbllimit = null, array $iwblprop = null)
+    public function getIWBackLinks($iwbltitle, $iwblprefix = null, $iwblcontinue = null, $iwbllimit = null, ?array $iwblprop = null)
     {
         // Build the request
         $path = '?action=query&list=iwbacklinks';

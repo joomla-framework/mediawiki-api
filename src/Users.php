@@ -97,7 +97,7 @@ class Users extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getUserInfo(array $ususers, array $usprop = null)
+    public function getUserInfo(array $ususers, ?array $usprop = null)
     {
         // Build the request path.
         $path = '?action=query&list=users';
@@ -124,7 +124,7 @@ class Users extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getCurrentUserInfo(array $uiprop = null)
+    public function getCurrentUserInfo(?array $uiprop = null)
     {
         // Build the request path.
         $path = '?action=query&meta=userinfo';
@@ -167,9 +167,9 @@ class Users extends AbstractMediawikiObject
         $ucend = null,
         $uccontinue = null,
         $ucdir = null,
-        array $ucnamespace = null,
-        array $ucprop = null,
-        array $ucshow = null,
+        ?array $ucnamespace = null,
+        ?array $ucprop = null,
+        ?array $ucshow = null,
         $uctag = null,
         $uctoponly = null
     ) {
