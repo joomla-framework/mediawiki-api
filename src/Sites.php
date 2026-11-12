@@ -30,11 +30,11 @@ class Sites extends AbstractMediawikiObject
      * @since   1.0
      */
     public function getSiteInfo(
-        array $siprop = null,
+        ?array $siprop = null,
         $sifilteriw = null,
         $sishowalldb = false,
         $sinumberingroup = false,
-        array $siinlanguagecode = null
+        ?array $siinlanguagecode = null
     ) {
         // Build the request.
         $path = '?action=query&meta=siteinfo';
@@ -85,7 +85,7 @@ class Sites extends AbstractMediawikiObject
      * @since   1.0
      */
     public function getEvents(
-        array $leprop = null,
+        ?array $leprop = null,
         $letype = null,
         $leaction = null,
         $letitle = null,
@@ -175,13 +175,13 @@ class Sites extends AbstractMediawikiObject
         $rcstart = null,
         $rcend = null,
         $rcdir = null,
-        array $rcnamespace = null,
+        ?array $rcnamespace = null,
         $rcuser = null,
         $rcexcludeuser = null,
         $rctag = null,
-        array $rcprop = null,
-        array $rctoken = null,
-        array $rcshow = null,
+        ?array $rcprop = null,
+        ?array $rctoken = null,
+        ?array $rcshow = null,
         $rclimit = null,
         $rctype = null,
         $rctoponly = null
@@ -263,13 +263,13 @@ class Sites extends AbstractMediawikiObject
      * @since   1.0
      */
     public function getProtectedTitles(
-        array $ptnamespace = null,
-        array $ptlevel = null,
+        ?array $ptnamespace = null,
+        ?array $ptlevel = null,
         $ptlimit = null,
         $ptdir = null,
         $ptstart = null,
         $ptend = null,
-        array $ptprop = null
+        ?array $ptprop = null
     ) {
         // Build the request.
         $path = '?action=query&list=protectedtitles';

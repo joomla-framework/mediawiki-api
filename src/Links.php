@@ -30,7 +30,7 @@ class Links extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getLinks(array $titles, array $plnamespace = null, $pllimit = null, $plcontinue = null, array $pltitles = null, $pldir = null)
+    public function getLinks(array $titles, ?array $plnamespace = null, $pllimit = null, $plcontinue = null, ?array $pltitles = null, $pldir = null)
     {
         // Build the request.
         $path = '?action=query&prop=links';
@@ -258,7 +258,7 @@ class Links extends AbstractMediawikiObject
         $alto = null,
         $alprefix = null,
         $alunique = null,
-        array $alprop = null,
+        ?array $alprop = null,
         $alnamespace = null,
         $allimit = null
     ) {

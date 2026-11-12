@@ -33,11 +33,11 @@ class Categories extends AbstractMediawikiObject
      */
     public function getCategories(
         array $titles,
-        array $clprop = null,
-        array $clshow = null,
+        ?array $clprop = null,
+        ?array $clshow = null,
         $cllimit = null,
         $clcontinue = false,
-        array $clcategories = null,
+        ?array $clcategories = null,
         $cldir = null
     ) {
         // Build the request.
@@ -157,9 +157,9 @@ class Categories extends AbstractMediawikiObject
         $cmtitle = null,
         $cmpageid = null,
         $cmlimit = null,
-        array $cmprop = null,
-        array $cmnamespace = null,
-        array $cmtype = null,
+        ?array $cmprop = null,
+        ?array $cmnamespace = null,
+        ?array $cmtype = null,
         $cmstart = null,
         $cmend = null,
         $cmstartsortkey = null,
@@ -273,7 +273,7 @@ class Categories extends AbstractMediawikiObject
         $acmin = null,
         $acmax = null,
         $aclimit = null,
-        array $acprop = null
+        ?array $acprop = null
     ) {
         // Build the request.
         $path = '?action=query&list=allcategories';
@@ -330,7 +330,7 @@ class Categories extends AbstractMediawikiObject
      *
      * @since   1.0
      */
-    public function getChangeTags(array $tgprop = null, $tglimit = null)
+    public function getChangeTags(?array $tgprop = null, $tglimit = null)
     {
         // Build the request.
         $path = '?action=query&list=tags';
