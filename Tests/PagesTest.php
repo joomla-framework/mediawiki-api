@@ -62,9 +62,8 @@ class PagesTest extends TestCase
      *
      * @var    string
      */
-    protected $tokenString = '<a><query><pages><page edittoken="EDITTOKEN" movetoken="MOVETOKEN" '
-        . 'deletetoken="DELETETOKEN" undeletetoken="UNDELETETOKEN" protecttoken="PROTECTTOKEN" '
-        . 'rollbacktoken="ROLLBACKTOKEN"></page></pages></query></a>';
+    protected $tokenString = '<api><query><tokens csrftoken="CSRFTOKEN" rollbacktoken="ROLLBACKTOKEN" '
+        . 'userrightstoken="RIGHTSTOKEN"/></query></api>';
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -112,14 +111,15 @@ class PagesTest extends TestCase
         $tokenResponse = $this->xmlResponse($this->tokenString);
         $writeResponse = $this->response;
 
-        $this->client->expects($this->exactly(2))
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with($this->stringStartsWith('/api.php?action=query&meta=tokens&type='))
+            ->willReturn($tokenResponse);
+
+        $this->client->expects($this->once())
             ->method('post')
             ->willReturnCallback(
-                function ($url, $data) use ($expectedPath, &$captured, $tokenResponse, $writeResponse) {
-                    if (str_contains($url, 'intoken=')) {
-                        return $tokenResponse;
-                    }
-
+                function ($url, $data) use ($expectedPath, &$captured, $writeResponse) {
                     $this->assertSame($expectedPath, $url);
                     $captured = $data;
 
@@ -290,11 +290,11 @@ class PagesTest extends TestCase
     public function testGetToken()
     {
         $this->client->expects($this->once())
-            ->method('post')
-            ->with('/api.php?action=query&prop=info&intoken=edit&titles=User:Admin&format=xml', null)
+            ->method('get')
+            ->with('/api.php?action=query&meta=tokens&type=csrf&format=xml')
             ->willReturn($this->xmlResponse($this->tokenString));
 
-        $this->assertSame('EDITTOKEN', $this->object->getToken('Admin', 'edit'));
+        $this->assertSame('CSRFTOKEN', $this->object->getToken('Admin', 'edit'));
     }
 
     /**
@@ -310,7 +310,7 @@ class PagesTest extends TestCase
         $this->object->editPage('Main Page', '2', 'New section title', 'Body text', 'Edit summary');
 
         $this->assertSame('Main Page', $captured['title']);
-        $this->assertSame('EDITTOKEN', $captured['token']);
+        $this->assertSame('CSRFTOKEN', $captured['token']);
         $this->assertSame('2', $captured['section']);
         $this->assertSame(
             'New section title',
@@ -340,7 +340,7 @@ class PagesTest extends TestCase
             'to must carry the destination title, not the reason'
         );
         $this->assertSame('Because', $captured['reason']);
-        $this->assertSame('MOVETOKEN', $captured['token']);
+        $this->assertSame('CSRFTOKEN', $captured['token']);
     }
 
     /**
@@ -378,6 +378,7 @@ class PagesTest extends TestCase
 
         $this->assertSame('Main Page', $captured['title']);
         $this->assertSame('Vandal', $captured['user']);
+        $this->assertSame('ROLLBACKTOKEN', $captured['token']);
         $this->assertSame(
             'Reverting vandalism',
             $captured['summary'],
@@ -400,7 +401,7 @@ class PagesTest extends TestCase
 
         $this->assertSame('Main Page', $captured['title']);
         $this->assertSame('Spam', $captured['reason']);
-        $this->assertSame('DELETETOKEN', $captured['token']);
+        $this->assertSame('CSRFTOKEN', $captured['token']);
     }
 
     /**
@@ -453,9 +454,9 @@ class PagesTest extends TestCase
         $this->assertSame('never', $captured['expiry']);
         $this->assertSame('High traffic', $captured['reason']);
         $this->assertSame(
-            'PROTECTTOKEN',
+            'CSRFTOKEN',
             $captured['token'],
-            'action=protect needs a protect token, not an unblock token'
+            'action=protect needs the csrf token'
         );
     }
 

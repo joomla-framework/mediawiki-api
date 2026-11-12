@@ -162,19 +162,19 @@ class UsersTest extends TestCase
     protected function expectTokenThenPost(string $expectedPath, ?array &$captured): void
     {
         $tokenResponse = $this->xmlResponse(
-            '<a><query><pages><page blocktoken="BLOCKTOKEN" unblocktoken="UNBLOCKTOKEN" '
-            . 'userrightstoken="RIGHTSTOKEN" emailtoken="EMAILTOKEN"></page></pages></query></a>'
+            '<api><query><tokens csrftoken="CSRFTOKEN" userrightstoken="RIGHTSTOKEN"/></query></api>'
         );
         $writeResponse = $this->response;
 
-        $this->client->expects($this->exactly(2))
+        $this->client->expects($this->once())
+            ->method('get')
+            ->with($this->stringStartsWith('/api.php?action=query&meta=tokens&type='))
+            ->willReturn($tokenResponse);
+
+        $this->client->expects($this->once())
             ->method('post')
             ->willReturnCallback(
-                function ($url, $data) use ($expectedPath, &$captured, $tokenResponse, $writeResponse) {
-                    if (str_contains($url, 'intoken=')) {
-                        return $tokenResponse;
-                    }
-
+                function ($url, $data) use ($expectedPath, &$captured, $writeResponse) {
                     $this->assertSame($expectedPath, $url);
                     $captured = $data;
 
@@ -250,7 +250,7 @@ class UsersTest extends TestCase
         $this->object->blockUser('Vandal', 'never', 'Persistent vandalism', null, null, null, null, null, true);
 
         $this->assertSame('Vandal', $captured['user']);
-        $this->assertSame('BLOCKTOKEN', $captured['token']);
+        $this->assertSame('CSRFTOKEN', $captured['token']);
         $this->assertSame('never', $captured['expiry']);
         $this->assertSame('Persistent vandalism', $captured['reason']);
         $this->assertSame(
@@ -274,7 +274,7 @@ class UsersTest extends TestCase
 
         $this->assertSame('Vandal', $captured['user']);
         $this->assertSame('Appeal accepted', $captured['reason']);
-        $this->assertSame('UNBLOCKTOKEN', $captured['token']);
+        $this->assertSame('CSRFTOKEN', $captured['token']);
     }
 
     /**
@@ -306,6 +306,7 @@ class UsersTest extends TestCase
         $this->object->assignGroup('Editor', 'sysop', 'bot', 'Promotion');
 
         $this->assertSame('Editor', $captured['user']);
+        $this->assertSame('RIGHTSTOKEN', $captured['token']);
         $this->assertSame('sysop', $captured['add']);
         $this->assertSame('bot', $captured['remove']);
         $this->assertSame('Promotion', $captured['reason']);

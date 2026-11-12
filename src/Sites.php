@@ -161,7 +161,7 @@ class Sites extends AbstractMediawikiObject
      * @param   string  $rcexcludeuser  Filter changes to exclude changes by this user.
      * @param   string  $rctag          Filter changes by this tag.
      * @param   ?array  $rcprop         Filter log actions to only this type.
-     * @param   ?array  $rctoken        Which token to obtain for each change.
+     * @param   ?array  $rctoken        Deprecated, removed from MediaWiki. Use Pages::getToken() instead.
      * @param   ?array  $rcshow         Filter changes by this criteria.
      * @param   string  $rclimit        Changes limit to return.
      * @param   string  $rctype         Filter event by type of changes.
@@ -222,6 +222,14 @@ class Sites extends AbstractMediawikiObject
         }
 
         if (isset($rctoken)) {
+            trigger_deprecation(
+                'joomla/mediawiki',
+                '__DEPLOY_VERSION__',
+                'The $rctoken parameter of %s() is deprecated and will be removed in 5.0. MediaWiki no longer supports it; use %s::getToken() instead.',
+                __METHOD__,
+                Pages::class
+            );
+
             $path .= '&rctoken=' . $this->encodeParameter($rctoken);
         }
 

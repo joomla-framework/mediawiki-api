@@ -90,6 +90,19 @@ the URL string as well.
 Options are a `Joomla\Registry\Registry`. A second constructor argument accepts a
 `Joomla\Mediawiki\Http` instance if you want to configure the transport.
 
+## Tokens
+
+Every write method (`editPage()`, `movePageByName()`, `blockUser()`, …) first fetches a token with
+`action=query&meta=tokens`. `getToken()` on `Pages` and `Users` does the same and still accepts the
+names of the old `intoken` parameter: `edit`, `delete`, `undelete`, `move`, `protect`, `block`,
+`unblock`, `email`, `emailuser`, `import` and `options` all return the `csrf` token; `rollback`,
+`userrights`, `watch`, `patrol`, `login` and `createaccount` return their own token. Its `$user`
+argument is no longer used.
+
+The `$intoken` argument of `Pages::getPageInfo()` and the `$rctoken` argument of
+`Sites::getRecentChanges()` are deprecated and will be removed in 5.0: MediaWiki no longer supports
+these parameters. Use `getToken()` instead.
+
 ## Things to know before you build on this
 
 **Pass values as they are.** Every value is percent-encoded (RFC 3986) before it is added to the

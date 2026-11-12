@@ -341,7 +341,7 @@ class Pages extends AbstractMediawikiObject
      *
      * @param   array    $titles      Page titles to retrieve info.
      * @param   ?array   $inprop      Which additional properties to get.
-     * @param   ?array   $intoken     Request a token to perform a data-modifying action on a page
+     * @param   ?array   $intoken     Deprecated, removed from MediaWiki. Use Pages::getToken() instead.
      * @param   boolean  $incontinue  When more results are available, use this to continue.
      *
      * @return  object
@@ -361,6 +361,14 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($intoken)) {
+            trigger_deprecation(
+                'joomla/mediawiki',
+                '__DEPLOY_VERSION__',
+                'The $intoken parameter of %s() is deprecated and will be removed in 5.0. MediaWiki no longer supports it; use %s::getToken() instead.',
+                __METHOD__,
+                self::class
+            );
+
             $path .= '&intoken=' . $this->encodeParameter($intoken);
         }
 
@@ -603,7 +611,11 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get access token.
      *
-     * @param   string  $user     The User to get token.
+     * The token is requested with `action=query&meta=tokens`. The old `intoken` names (`edit`, `delete`,
+     * `move`, `block`, `emailuser`, …) are mapped to the `csrf` token; `rollback` and `userrights` have
+     * their own tokens.
+     *
+     * @param   string  $user     Unused. Tokens are not bound to a page or user.
      * @param   string  $intoken  The type of token.
      *
      * @return  string
@@ -612,12 +624,6 @@ class Pages extends AbstractMediawikiObject
      */
     public function getToken($user, $intoken)
     {
-        // Build the request path.
-        $path = '?action=query&prop=info&intoken=' . $this->encodeParameter($intoken) . '&titles=User:' . $this->encodeParameter($user);
-
-        // Send the request.
-        $response = $this->client->post($this->fetchUrl($path), null);
-
-        return (string) $this->validateResponse($response)->query->pages->page[$intoken . 'token'];
+        return $this->fetchToken((string) $intoken);
     }
 }

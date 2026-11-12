@@ -21,6 +21,26 @@ use Joomla\Uri\Uri;
 abstract class AbstractMediawikiObject
 {
     /**
+     * The token types of `action=query&meta=tokens` for the names of the removed `intoken` parameter.
+     *
+     * @var    array
+     * @since  __DEPLOY_VERSION__
+     */
+    private const TOKEN_TYPES = [
+        'block'     => 'csrf',
+        'delete'    => 'csrf',
+        'edit'      => 'csrf',
+        'email'     => 'csrf',
+        'emailuser' => 'csrf',
+        'import'    => 'csrf',
+        'move'      => 'csrf',
+        'options'   => 'csrf',
+        'protect'   => 'csrf',
+        'unblock'   => 'csrf',
+        'undelete'  => 'csrf',
+    ];
+
+    /**
      * @var    Registry  Options for the Mediawiki object.
      * @since  1.0
      */
@@ -93,6 +113,28 @@ abstract class AbstractMediawikiObject
         }
 
         return implode('|', array_map(static fn ($element) => rawurlencode((string) $element), $value));
+    }
+
+    /**
+     * Fetch a token for a data-modifying action with `action=query&meta=tokens`.
+     *
+     * Accepts the current token types (`csrf`, `rollback`, `userrights`, `watch`, `patrol`, `login`, …)
+     * and the names of the removed `intoken` parameter (`edit`, `delete`, `move`, `block`, …), which are
+     * mapped to `csrf`.
+     *
+     * @param   string  $type  The token type.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function fetchToken(string $type): string
+    {
+        $type = self::TOKEN_TYPES[$type] ?? $type;
+
+        $response = $this->client->get($this->fetchUrl('?action=query&meta=tokens&type=' . $this->encodeParameter($type)));
+
+        return (string) $this->validateResponse($response)->query->tokens[$type . 'token'];
     }
 
     /**

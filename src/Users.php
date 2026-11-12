@@ -425,7 +425,11 @@ class Users extends AbstractMediawikiObject
     /**
      * Method to get access token.
      *
-     * @param   string  $user     The User to get token.
+     * The token is requested with `action=query&meta=tokens`. The old `intoken` names (`edit`, `delete`,
+     * `move`, `block`, `emailuser`, …) are mapped to the `csrf` token; `rollback` and `userrights` have
+     * their own tokens.
+     *
+     * @param   string  $user     Unused. Tokens are not bound to a page or user.
      * @param   string  $intoken  The type of token.
      *
      * @return  string
@@ -434,12 +438,6 @@ class Users extends AbstractMediawikiObject
      */
     public function getToken($user, $intoken)
     {
-        // Build the request path.
-        $path = '?action=query&prop=info&intoken=' . $this->encodeParameter($intoken) . '&titles=User:' . $this->encodeParameter($user);
-
-        // Send the request.
-        $response = $this->client->post($this->fetchUrl($path), null);
-
-        return (string) $this->validateResponse($response)->query->pages->page[$intoken . 'token'];
+        return $this->fetchToken((string) $intoken);
     }
 }
