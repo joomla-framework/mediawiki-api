@@ -60,6 +60,16 @@ abstract class AbstractMediawikiObject
         // Append the path with output format
         $path .= (strpos($path, '?') === false ? '?' : '&') . 'format=xml';
 
+        // Ask the wiki to refuse the request while its replication lag exceeds this many seconds.
+        if ($this->options->get('api.maxlag') !== null) {
+            $path .= '&maxlag=' . (int) $this->options->get('api.maxlag');
+        }
+
+        // Make the request fail unless the client is logged in (user) or logged in as a bot (bot).
+        if ($this->options->get('api.assert')) {
+            $path .= '&assert=' . $this->encodeParameter($this->options->get('api.assert'));
+        }
+
         $uri = new Uri($this->options->get('api.url') . '/api.php' . $path);
 
         if ($this->options->get('api.username', false)) {

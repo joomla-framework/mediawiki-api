@@ -122,8 +122,19 @@ yourself when the values are not guaranteed to be non-empty.
 `action=clientlogin` and bot passwords. It still works for bot passwords in the `User@BotName`
 form, but not for normal accounts on a current wiki.
 
-**No `maxlag`, no rate limiting.** The client sends no `maxlag` parameter — which the Wikimedia
-projects expect from automated clients — and has no backoff.
+**`maxlag` and `assert` are opt-in.** Set the option `api.maxlag` to a number of seconds to send
+`maxlag` with every request, as the Wikimedia projects expect from automated clients; while the
+wiki's replication lag is higher, it refuses the request with the error code `maxlag`. Set
+`api.assert` to `user` or `bot` to make every request fail unless the client is logged in (as a
+bot). The client does not retry or back off; that is up to the caller.
+
+```php
+$options = new Registry([
+    'api.url'    => 'https://en.wikipedia.org/w',
+    'api.maxlag' => 5,
+    'api.assert' => 'bot',
+]);
+```
 
 **Paging is up to the caller.** The client does not follow continuations itself. To fetch the next
 batch, pass the value from the `continue` element of the previous response as the method's
