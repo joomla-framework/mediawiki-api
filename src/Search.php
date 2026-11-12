@@ -45,22 +45,22 @@ class Search extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=search';
 
-        $path .= '&srsearch=' . $srsearch;
+        $path .= '&srsearch=' . $this->encodeParameter($srsearch);
 
         if (isset($srnamespace)) {
-            $path .= '&srnamespace=' . $this->buildParameter($srnamespace);
+            $path .= '&srnamespace=' . $this->encodeParameter($srnamespace);
         }
 
         if (isset($srwhat)) {
-            $path .= '&srwhat=' . $srwhat;
+            $path .= '&srwhat=' . $this->encodeParameter($srwhat);
         }
 
         if (isset($srinfo)) {
-            $path .= '&srinfo=' . $this->buildParameter($srinfo);
+            $path .= '&srinfo=' . $this->encodeParameter($srinfo);
         }
 
         if (isset($srprop)) {
-            $path .= '&srprop=' . $this->buildParameter($srprop);
+            $path .= '&srprop=' . $this->encodeParameter($srprop);
         }
 
         if ($srredirects) {
@@ -68,11 +68,11 @@ class Search extends AbstractMediawikiObject
         }
 
         if (isset($sroffest)) {
-            $path .= '&sroffest=' . $sroffest;
+            $path .= '&sroffest=' . $this->encodeParameter($sroffest);
         }
 
         if (isset($srlimit)) {
-            $path .= '&srlimit=' . $srlimit;
+            $path .= '&srlimit=' . $this->encodeParameter($srlimit);
         }
 
         // Send the request.
@@ -99,22 +99,22 @@ class Search extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=search';
 
-        $path .= '&search=' . $search;
+        $path .= '&search=' . $this->encodeParameter($search);
 
         if (isset($limit)) {
-            $path .= '&limit=' . $limit;
+            $path .= '&limit=' . $this->encodeParameter($limit);
         }
 
         if (isset($namespace)) {
-            $path .= '&namespace=' . $this->buildParameter($namespace);
+            $path .= '&namespace=' . $this->encodeParameter($namespace);
         }
 
         if (isset($suggest)) {
-            $path .= '&suggest=' . $suggest;
+            $path .= '&suggest=' . $this->encodeParameter($suggest);
         }
 
         if (isset($format)) {
-            $path .= '&format=' . $format;
+            $path .= '&format=' . $this->encodeParameter($format);
         }
 
         // Send the request.

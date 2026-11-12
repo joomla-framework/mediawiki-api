@@ -139,7 +139,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=info&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=info&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -157,7 +157,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=info&titles=Main Page|Joomla&inprop=protection&intoken=edit&incontinue=&format=xml')
+            ->with('/api.php?action=query&prop=info&titles=Main%20Page|Joomla&inprop=protection&intoken=edit&incontinue=&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -177,7 +177,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=pageprops&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=pageprops&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -197,7 +197,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=revisions&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=revisions&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -215,7 +215,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=revisions&titles=Main Page&rvprop=ids|timestamp&rvparse=&rvlimit=10&format=xml')
+            ->with('/api.php?action=query&prop=revisions&titles=Main%20Page&rvprop=ids|timestamp&rvparse=&rvlimit=10&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -233,7 +233,7 @@ class PagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=templates&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=templates&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(

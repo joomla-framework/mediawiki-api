@@ -92,14 +92,10 @@ Options are a `Joomla\Registry\Registry`. A second constructor argument accepts 
 
 ## Things to know before you build on this
 
-**Request parameters are concatenated, not encoded.** Each endpoint class builds its query string
-by string concatenation, so a page title containing `&`, `#` or `=` — all legal in MediaWiki
-titles — changes the request rather than being sent as a value. Encode values before passing them
-in:
-
-```php
-$mediawiki->pages->getPageInfo([rawurlencode($title)]);
-```
+**Pass values as they are.** Every value is percent-encoded (RFC 3986) before it is added to the
+query string, so a page title or search term containing `&`, `#`, `=` or `+` — all legal in
+MediaWiki titles — is sent as a value. Do not encode values yourself; they would be encoded twice.
+Multi-value parameters are joined with `|`, so a single value must not contain `|`.
 
 **The XML parser is not hardened.** `validateResponse()` calls `simplexml_load_string()` without
 `LIBXML_NONET`, without internal error handling, and without checking the return value. On invalid

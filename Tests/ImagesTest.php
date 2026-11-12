@@ -90,7 +90,7 @@ class ImagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&prop=images&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&prop=images&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(
@@ -110,7 +110,7 @@ class ImagesTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&generator=images&prop=info&titles=Main Page&format=xml')
+            ->with('/api.php?action=query&generator=images&prop=info&titles=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(

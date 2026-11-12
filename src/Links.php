@@ -36,26 +36,26 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&prop=links';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($plnamespace)) {
-            $path .= '&plnamespace=' . $this->buildParameter($plnamespace);
+            $path .= '&plnamespace=' . $this->encodeParameter($plnamespace);
         }
 
         if (isset($pllimit)) {
-            $path .= '&pllimit=' . $pllimit;
+            $path .= '&pllimit=' . $this->encodeParameter($pllimit);
         }
 
         if (isset($plcontinue)) {
-            $path .= '&plcontinue=' . $plcontinue;
+            $path .= '&plcontinue=' . $this->encodeParameter($plcontinue);
         }
 
         if (isset($pltitles)) {
-            $path .= '&pltitles=' . $this->buildParameter($pltitles);
+            $path .= '&pltitles=' . $this->encodeParameter($pltitles);
         }
 
         if (isset($pldir)) {
-            $path .= '&pldir=' . $pldir;
+            $path .= '&pldir=' . $this->encodeParameter($pldir);
         }
 
         // Send the request.
@@ -79,7 +79,7 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&generator=links&prop=info';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         // Send the request.
         $response = $this->client->get($this->fetchUrl($path));
@@ -108,14 +108,14 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&prop=links';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($iwurl) {
             $path .= '&iwurl=';
         }
 
         if (isset($iwlimit)) {
-            $path .= '&iwlimit=' . $iwlimit;
+            $path .= '&iwlimit=' . $this->encodeParameter($iwlimit);
         }
 
         if ($iwcontinue) {
@@ -123,15 +123,15 @@ class Links extends AbstractMediawikiObject
         }
 
         if (isset($iwprefix)) {
-            $path .= '&iwprefix=' . $iwprefix;
+            $path .= '&iwprefix=' . $this->encodeParameter($iwprefix);
         }
 
         if (isset($iwtitle)) {
-            $path .= '&iwtitle=' . $iwtitle;
+            $path .= '&iwtitle=' . $this->encodeParameter($iwtitle);
         }
 
         if (isset($iwdir)) {
-            $path .= '&iwdir=' . $iwdir;
+            $path .= '&iwdir=' . $this->encodeParameter($iwdir);
         }
 
         // Send the request.
@@ -161,10 +161,10 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&prop=langlinks';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($lllimit)) {
-            $path .= '&lllimit=' . $lllimit;
+            $path .= '&lllimit=' . $this->encodeParameter($lllimit);
         }
 
         if ($llcontinue) {
@@ -172,19 +172,19 @@ class Links extends AbstractMediawikiObject
         }
 
         if (isset($llurl)) {
-            $path .= '&llurl=' . $llurl;
+            $path .= '&llurl=' . $this->encodeParameter($llurl);
         }
 
         if (isset($lllang)) {
-            $path .= '&lllang=' . $lllang;
+            $path .= '&lllang=' . $this->encodeParameter($lllang);
         }
 
         if (isset($lltitle)) {
-            $path .= '&lltitle=' . $lltitle;
+            $path .= '&lltitle=' . $this->encodeParameter($lltitle);
         }
 
         if (isset($lldir)) {
-            $path .= '&lldir=' . $lldir;
+            $path .= '&lldir=' . $this->encodeParameter($lldir);
         }
 
         // Send the request.
@@ -212,22 +212,22 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&prop=extlinks';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($ellimit)) {
-            $path .= '&ellimit=' . $ellimit;
+            $path .= '&ellimit=' . $this->encodeParameter($ellimit);
         }
 
         if (isset($eloffset)) {
-            $path .= '&eloffset=' . $eloffset;
+            $path .= '&eloffset=' . $this->encodeParameter($eloffset);
         }
 
         if (isset($elprotocol)) {
-            $path .= '&elprotocol=' . $elprotocol;
+            $path .= '&elprotocol=' . $this->encodeParameter($elprotocol);
         }
 
         if (isset($elquery)) {
-            $path .= '&elquery=' . $elquery;
+            $path .= '&elquery=' . $this->encodeParameter($elquery);
         }
 
         // Send the request.
@@ -270,31 +270,31 @@ class Links extends AbstractMediawikiObject
         }
 
         if (isset($alfrom)) {
-            $path .= '&alfrom=' . $alfrom;
+            $path .= '&alfrom=' . $this->encodeParameter($alfrom);
         }
 
         if (isset($alto)) {
-            $path .= '&alto=' . $alto;
+            $path .= '&alto=' . $this->encodeParameter($alto);
         }
 
         if (isset($alprefix)) {
-            $path .= '&alprefix=' . $alprefix;
+            $path .= '&alprefix=' . $this->encodeParameter($alprefix);
         }
 
         if (isset($alunique)) {
-            $path .= '&alunique=' . $alunique;
+            $path .= '&alunique=' . $this->encodeParameter($alunique);
         }
 
         if (isset($alprop)) {
-            $path .= '&alprop=' . $this->buildParameter($alprop);
+            $path .= '&alprop=' . $this->encodeParameter($alprop);
         }
 
         if (isset($alnamespace)) {
-            $path .= '&alnamespace=' . $alnamespace;
+            $path .= '&alnamespace=' . $this->encodeParameter($alnamespace);
         }
 
         if (isset($allimit)) {
-            $path .= '&allimit=' . $allimit;
+            $path .= '&allimit=' . $this->encodeParameter($allimit);
         }
 
         // Send the request.

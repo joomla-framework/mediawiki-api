@@ -40,11 +40,11 @@ class Sites extends AbstractMediawikiObject
         $path = '?action=query&meta=siteinfo';
 
         if (isset($siprop)) {
-            $path .= '&siprop=' . $this->buildParameter($siprop);
+            $path .= '&siprop=' . $this->encodeParameter($siprop);
         }
 
         if (isset($sifilteriw)) {
-            $path .= '&sifilteriw=' . $sifilteriw;
+            $path .= '&sifilteriw=' . $this->encodeParameter($sifilteriw);
         }
 
         if ($sishowalldb) {
@@ -56,7 +56,7 @@ class Sites extends AbstractMediawikiObject
         }
 
         if (isset($siinlanguagecode)) {
-            $path .= '&siinlanguagecode=' . $this->buildParameter($siinlanguagecode);
+            $path .= '&siinlanguagecode=' . $this->encodeParameter($siinlanguagecode);
         }
 
         // Send the request.
@@ -101,47 +101,47 @@ class Sites extends AbstractMediawikiObject
         $path = '?action=query&list=logevents';
 
         if (isset($leprop)) {
-            $path .= '&leprop=' . $this->buildParameter($leprop);
+            $path .= '&leprop=' . $this->encodeParameter($leprop);
         }
 
         if (isset($letype)) {
-            $path .= '&letype=' . $letype;
+            $path .= '&letype=' . $this->encodeParameter($letype);
         }
 
         if (isset($leaction)) {
-            $path .= '&leaction=' . $leaction;
+            $path .= '&leaction=' . $this->encodeParameter($leaction);
         }
 
         if (isset($letitle)) {
-            $path .= '&letitle=' . $letitle;
+            $path .= '&letitle=' . $this->encodeParameter($letitle);
         }
 
         if (isset($leprefix)) {
-            $path .= '&leprefix=' . $leprefix;
+            $path .= '&leprefix=' . $this->encodeParameter($leprefix);
         }
 
         if (isset($letag)) {
-            $path .= '&letag=' . $letag;
+            $path .= '&letag=' . $this->encodeParameter($letag);
         }
 
         if (isset($leuser)) {
-            $path .= '&leuser=' . $leuser;
+            $path .= '&leuser=' . $this->encodeParameter($leuser);
         }
 
         if (isset($lestart)) {
-            $path .= '&lestart=' . $lestart;
+            $path .= '&lestart=' . $this->encodeParameter($lestart);
         }
 
         if (isset($leend)) {
-            $path .= '&leend=' . $leend;
+            $path .= '&leend=' . $this->encodeParameter($leend);
         }
 
         if (isset($ledir)) {
-            $path .= '&ledir=' . $ledir;
+            $path .= '&ledir=' . $this->encodeParameter($ledir);
         }
 
         if (isset($lelimit)) {
-            $path .= '&lelimit=' . $lelimit;
+            $path .= '&lelimit=' . $this->encodeParameter($lelimit);
         }
 
         // Send the request.
@@ -190,55 +190,55 @@ class Sites extends AbstractMediawikiObject
         $path = '?action=query&list=recentchanges';
 
         if (isset($rcstart)) {
-            $path .= '&rcstart=' . $rcstart;
+            $path .= '&rcstart=' . $this->encodeParameter($rcstart);
         }
 
         if (isset($rcend)) {
-            $path .= '&rcend=' . $rcend;
+            $path .= '&rcend=' . $this->encodeParameter($rcend);
         }
 
         if (isset($rcdir)) {
-            $path .= '&rcdir=' . $rcdir;
+            $path .= '&rcdir=' . $this->encodeParameter($rcdir);
         }
 
         if (isset($rcnamespace)) {
-            $path .= '&rcnamespaces=' . $this->buildParameter($rcnamespace);
+            $path .= '&rcnamespaces=' . $this->encodeParameter($rcnamespace);
         }
 
         if (isset($rcuser)) {
-            $path .= '&rcuser=' . $rcuser;
+            $path .= '&rcuser=' . $this->encodeParameter($rcuser);
         }
 
         if (isset($rcexcludeuser)) {
-            $path .= '&rcexcludeuser=' . $rcexcludeuser;
+            $path .= '&rcexcludeuser=' . $this->encodeParameter($rcexcludeuser);
         }
 
         if (isset($rctag)) {
-            $path .= '&rctag=' . $rctag;
+            $path .= '&rctag=' . $this->encodeParameter($rctag);
         }
 
         if (isset($rcprop)) {
-            $path .= '&rcprop=' . $this->buildParameter($rcprop);
+            $path .= '&rcprop=' . $this->encodeParameter($rcprop);
         }
 
         if (isset($rctoken)) {
-            $path .= '&rctoken=' . $this->buildParameter($rctoken);
+            $path .= '&rctoken=' . $this->encodeParameter($rctoken);
         }
 
         if (isset($rcshow)) {
-            $path .= '&rcshow=' . $this->buildParameter($rcshow);
+            $path .= '&rcshow=' . $this->encodeParameter($rcshow);
         }
 
         if (isset($rclimit)) {
-            $path .= '&rclimit=' . $rclimit;
+            $path .= '&rclimit=' . $this->encodeParameter($rclimit);
         }
 
         if (isset($rctype)) {
-            $path .= '&rctype=' . $rctype;
+            $path .= '&rctype=' . $this->encodeParameter($rctype);
         }
 
         if (isset($rctoponly)) {
-            $path .= '&rctoponly=' . $rctoponly;
+            $path .= '&rctoponly=' . $this->encodeParameter($rctoponly);
         }
 
         // Send the request.
@@ -275,31 +275,31 @@ class Sites extends AbstractMediawikiObject
         $path = '?action=query&list=protectedtitles';
 
         if (isset($ptnamespace)) {
-            $path .= '&ptnamespace=' . $this->buildParameter($ptnamespace);
+            $path .= '&ptnamespace=' . $this->encodeParameter($ptnamespace);
         }
 
         if (isset($ptlevel)) {
-            $path .= '&ptlevel=' . $this->buildParameter($ptlevel);
+            $path .= '&ptlevel=' . $this->encodeParameter($ptlevel);
         }
 
         if (isset($ptlimit)) {
-            $path .= '&ptlimit=' . $ptlimit;
+            $path .= '&ptlimit=' . $this->encodeParameter($ptlimit);
         }
 
         if (isset($ptdir)) {
-            $path .= '&ptdir=' . $ptdir;
+            $path .= '&ptdir=' . $this->encodeParameter($ptdir);
         }
 
         if (isset($ptstart)) {
-            $path .= '&ptstart=' . $ptstart;
+            $path .= '&ptstart=' . $this->encodeParameter($ptstart);
         }
 
         if (isset($ptend)) {
-            $path .= '&ptend=' . $ptend;
+            $path .= '&ptend=' . $this->encodeParameter($ptend);
         }
 
         if (isset($ptprop)) {
-            $path .= '&ptprop=' . $this->buildParameter($ptprop);
+            $path .= '&ptprop=' . $this->encodeParameter($ptprop);
         }
 
         // Send the request.
