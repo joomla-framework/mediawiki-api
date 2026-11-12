@@ -40,6 +40,13 @@ Each is a lazily created property on `Mediawiki`:
 | `$mediawiki->search` | `Search` | Full-text search, opensearch |
 | `$mediawiki->sites` | `Sites` | Site info, meta information |
 
+The method arguments are named after the MediaWiki parameters they fill (`$cllimit` → `cllimit`),
+with a few historical exceptions: `Images::getImages()` sends `$imagelimit`/`$imagecontinue` as
+`imlimit`/`imcontinue`, `Images::getImageInfo()` sends its `li*` arguments as the `ii*` parameters
+of `prop=imageinfo` and takes the files to describe as its last argument, `$titles`, and
+`Search::search()` sends `$sroffest` as `sroffset`. `Search::openSearch()` calls
+`action=opensearch`; its `$format` argument is ignored, the response is always XML.
+
 ```php
 $mediawiki->pages->getPageInfo(['Main Page']);
 $mediawiki->pages->getPageContent(['Main Page']);
@@ -92,14 +99,10 @@ Options are a `Joomla\Registry\Registry`. A second constructor argument accepts 
 
 ## Things to know before you build on this
 
-**Request parameters are concatenated, not encoded.** Each endpoint class builds its query string
-by string concatenation, so a page title containing `&`, `#` or `=` — all legal in MediaWiki
-titles — changes the request rather than being sent as a value. Encode values before passing them
-in:
-
-```php
-$mediawiki->pages->getPageInfo([rawurlencode($title)]);
-```
+**Pass values as they are.** Every value is percent-encoded (RFC 3986) before it is added to the
+query string, so a page title or search term containing `&`, `#`, `=` or `+` — all legal in
+MediaWiki titles — is sent as a value. Do not encode values yourself; they would be encoded twice.
+Multi-value parameters are joined with `|`, so a single value must not contain `|`.
 
 **The XML parser is not hardened.** `validateResponse()` calls `simplexml_load_string()` without
 `LIBXML_NONET`, without internal error handling, and without checking the return value. On invalid
@@ -119,9 +122,37 @@ yourself when the values are not guaranteed to be non-empty.
 `action=clientlogin` and bot passwords. It still works for bot passwords in the `User@BotName`
 form, but not for normal accounts on a current wiki.
 
-**No `maxlag`, no rate limiting, no continuation.** The client sends no `maxlag` parameter — which
-the Wikimedia projects expect from automated clients — has no backoff, and does not follow the
-`continue` token, so paginated queries have to be looped by the caller.
+**`maxlag` and `assert` are opt-in.** Set the option `api.maxlag` to a number of seconds to send
+`maxlag` with every request, as the Wikimedia projects expect from automated clients; while the
+wiki's replication lag is higher, it refuses the request with the error code `maxlag`. Set
+`api.assert` to `user` or `bot` to make every request fail unless the client is logged in (as a
+bot). The client does not retry or back off; that is up to the caller.
+
+```php
+$options = new Registry([
+    'api.url'    => 'https://en.wikipedia.org/w',
+    'api.maxlag' => 5,
+    'api.assert' => 'bot',
+]);
+```
+
+**Paging is up to the caller.** The client does not follow continuations itself. To fetch the next
+batch, pass the value from the `continue` element of the previous response as the method's
+`*continue` argument:
+
+```php
+$result = $mediawiki->categories->getCategories(['Main Page']);
+
+while (isset($result->continue['clcontinue'])) {
+    $result = $mediawiki->categories->getCategories(
+        ['Main Page'],
+        clcontinue: (string) $result->continue['clcontinue']
+    );
+}
+```
+
+Passing `true`, as earlier versions expected, sends the parameter without a value, which does not
+continue anything.
 
 **Errors are all `DomainException`.** The MediaWiki error code (`badtoken`, `ratelimited`,
 `permissiondenied`, `readonly`) is not preserved in a form you can branch on; only the message text

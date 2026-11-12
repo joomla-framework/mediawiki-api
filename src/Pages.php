@@ -42,7 +42,7 @@ class Pages extends AbstractMediawikiObject
             'title'        => $title,
             'token'        => $token,
             'section'      => $section,
-            'sectiontitle' => $section,
+            'sectiontitle' => $sectiontitle,
             'text'         => $text,
             'summary'      => $summary,
         ];
@@ -193,7 +193,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'from'           => $from,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -244,7 +244,7 @@ class Pages extends AbstractMediawikiObject
         // Build the request data.
         $data = [
             'fromid'         => $fromid,
-            'to'             => $reason,
+            'to'             => $to,
             'token'          => $token,
             'reason'         => $reason,
             'movetalk'       => $movetalk,
@@ -286,7 +286,7 @@ class Pages extends AbstractMediawikiObject
             'title'     => $title,
             'token'     => $token,
             'user'      => $user,
-            'expiry'    => $summary,
+            'summary'   => $summary,
             'markbot'   => $markbot,
             'watchlist' => $watchlist,
         ];
@@ -314,7 +314,7 @@ class Pages extends AbstractMediawikiObject
     public function changeProtection($title, $protections, $expiry = null, $reason = null, $cascade = null, $watchlist = null)
     {
         // Get the token.
-        $token = $this->getToken($title, 'unblock');
+        $token = $this->getToken($title, 'protect');
 
         // Build the request path.
         $path = '?action=protect';
@@ -354,18 +354,18 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=info';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($inprop)) {
-            $path .= '&inprop=' . $this->buildParameter($inprop);
+            $path .= '&inprop=' . $this->encodeParameter($inprop);
         }
 
         if (isset($intoken)) {
-            $path .= '&intoken=' . $this->buildParameter($intoken);
+            $path .= '&intoken=' . $this->encodeParameter($intoken);
         }
 
         if ($incontinue) {
-            $path .= '&incontinue=';
+            $path .= '&incontinue=' . $this->encodeContinuation($incontinue);
         }
 
         // Send the request.
@@ -377,9 +377,9 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get various properties defined in the page content.
      *
-     * @param   array    $titles      Page titles to retrieve properties.
-     * @param   boolean  $ppcontinue  When more results are available, use this to continue.
-     * @param   string   $ppprop      Page prop to look on the page for.
+     * @param   array           $titles      Page titles to retrieve properties.
+     * @param   string|boolean  $ppcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $ppprop      Page prop to look on the page for.
      *
      * @return  object
      *
@@ -391,14 +391,14 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=pageprops';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($ppcontinue) {
-            $path .= '&ppcontinue=';
+            $path .= '&ppcontinue=' . $this->encodeContinuation($ppcontinue);
         }
 
         if (isset($ppprop)) {
-            $path .= '&ppprop=' . $ppprop;
+            $path .= '&ppprop=' . $this->encodeParameter($ppprop);
         }
 
         // Send the request.
@@ -425,10 +425,10 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=revisions';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($rvprop)) {
-            $path .= '&rvprop=' . $this->buildParameter($rvprop);
+            $path .= '&rvprop=' . $this->encodeParameter($rvprop);
         }
 
         if ($rvparse) {
@@ -436,7 +436,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if (isset($rvlimit)) {
-            $path .= '&rvlimit=' . $rvlimit;
+            $path .= '&rvlimit=' . $this->encodeParameter($rvlimit);
         }
 
         // Send the request.
@@ -448,12 +448,12 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all page templates from the given page.
      *
-     * @param   array    $titles       Page titles to retrieve templates.
-     * @param   ?array   $tlnamespace  Show templates in this namespace(s) only.
-     * @param   integer  $tllimit      How many templates to return.
-     * @param   boolean  $tlcontinue   When more results are available, use this to continue.
-     * @param   string   $tltemplates  Only list these templates.
-     * @param   string   $tldir        The direction in which to list.
+     * @param   array           $titles       Page titles to retrieve templates.
+     * @param   ?array          $tlnamespace  Show templates in this namespace(s) only.
+     * @param   integer         $tllimit      How many templates to return.
+     * @param   string|boolean  $tlcontinue   The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $tltemplates  Only list these templates.
+     * @param   string          $tldir        The direction in which to list.
      *
      * @return  object
      *
@@ -471,26 +471,26 @@ class Pages extends AbstractMediawikiObject
         $path = '?action=query&prop=templates';
 
         // Append titles to the request.
-        $path .= '&titles=' . $this->buildParameter($titles);
+        $path .= '&titles=' . $this->encodeParameter($titles);
 
         if (isset($tlnamespace)) {
-            $path .= '&tlnamespace=' . $this->buildParameter($tlnamespace);
+            $path .= '&tlnamespace=' . $this->encodeParameter($tlnamespace);
         }
 
         if (isset($tllimit)) {
-            $path .= '&tllimit=' . $tllimit;
+            $path .= '&tllimit=' . $this->encodeParameter($tllimit);
         }
 
         if ($tlcontinue) {
-            $path .= '&tlcontinue=';
+            $path .= '&tlcontinue=' . $this->encodeContinuation($tlcontinue);
         }
 
         if (isset($tltemplates)) {
-            $path .= '&tltemplates=' . $tltemplates;
+            $path .= '&tltemplates=' . $this->encodeParameter($tltemplates);
         }
 
         if (isset($tldir)) {
-            $path .= '&tldir=' . $tldir;
+            $path .= '&tldir=' . $this->encodeParameter($tldir);
         }
 
         // Send the request.
@@ -502,13 +502,13 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all pages that link to the given page.
      *
-     * @param   string   $bltitle           Title to search.
-     * @param   integer  $blpageid          Pageid to search.
-     * @param   boolean  $blcontinue        When more results are available, use this to continue.
-     * @param   ?array   $blnamespace       The namespace to enumerate.
-     * @param   string   $blfilterredirect  How to filter for redirects..
-     * @param   integer  $bllimit           How many total pages to return.
-     * @param   boolean  $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
+     * @param   string          $bltitle           Title to search.
+     * @param   integer         $blpageid          Pageid to search.
+     * @param   string|boolean  $blcontinue        The continuation value from the previous response; `true` sends an empty value.
+     * @param   ?array          $blnamespace       The namespace to enumerate.
+     * @param   string          $blfilterredirect  How to filter for redirects..
+     * @param   integer         $bllimit           How many total pages to return.
+     * @param   boolean         $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
      *
      * @return  object
      *
@@ -526,26 +526,26 @@ class Pages extends AbstractMediawikiObject
         // Build the request.
         $path = '?action=query&list=backlinks';
 
-        $path .= '&bltitle=' . $bltitle;
+        $path .= '&bltitle=' . $this->encodeParameter($bltitle);
 
         if (isset($blpageid)) {
-            $path .= '&blpageid=' . $blpageid;
+            $path .= '&blpageid=' . $this->encodeParameter($blpageid);
         }
 
         if ($blcontinue) {
-            $path .= '&blcontinue=';
+            $path .= '&blcontinue=' . $this->encodeContinuation($blcontinue);
         }
 
         if (isset($blnamespace)) {
-            $path .= '&blnamespace=' . $this->buildParameter($blnamespace);
+            $path .= '&blnamespace=' . $this->encodeParameter($blnamespace);
         }
 
         if (isset($blfilterredirect)) {
-            $path .= '&blfilterredirect=' . $blfilterredirect;
+            $path .= '&blfilterredirect=' . $this->encodeParameter($blfilterredirect);
         }
 
         if (isset($bllimit)) {
-            $path .= '&bllimit=' . $bllimit;
+            $path .= '&bllimit=' . $this->encodeParameter($bllimit);
         }
 
         if ($blredirect) {
@@ -561,11 +561,11 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all pages that link to the given interwiki link.
      *
-     * @param   string   $iwbltitle     Interwiki link to search for. Must be used with iwblprefix.
-     * @param   string   $iwblprefix    Prefix for the interwiki.
-     * @param   boolean  $iwblcontinue  When more results are available, use this to continue.
-     * @param   integer  $iwbllimit     How many total pages to return.
-     * @param   ?array   $iwblprop      Which properties to get.
+     * @param   string          $iwbltitle     Interwiki link to search for. Must be used with iwblprefix.
+     * @param   string          $iwblprefix    Prefix for the interwiki.
+     * @param   string|boolean  $iwblcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   integer         $iwbllimit     How many total pages to return.
+     * @param   ?array          $iwblprop      Which properties to get.
      *
      * @return  object
      *
@@ -576,22 +576,22 @@ class Pages extends AbstractMediawikiObject
         // Build the request
         $path = '?action=query&list=iwbacklinks';
 
-        $path .= '&iwbltitle=' . $iwbltitle;
+        $path .= '&iwbltitle=' . $this->encodeParameter($iwbltitle);
 
         if (isset($iwblprefix)) {
-            $path .= '&iwblprefix=' . $iwblprefix;
+            $path .= '&iwblprefix=' . $this->encodeParameter($iwblprefix);
         }
 
         if ($iwblcontinue) {
-            $path .= '&iwblcontinue=';
+            $path .= '&iwblcontinue=' . $this->encodeContinuation($iwblcontinue);
         }
 
         if (isset($iwbllimit)) {
-            $path .= '&bllimit=' . $iwbllimit;
+            $path .= '&iwbllimit=' . $this->encodeParameter($iwbllimit);
         }
 
         if (isset($iwblprop)) {
-            $path .= '&iwblprop=' . $this->buildParameter($iwblprop);
+            $path .= '&iwblprop=' . $this->encodeParameter($iwblprop);
         }
 
         // Send the request.
@@ -613,7 +613,7 @@ class Pages extends AbstractMediawikiObject
     public function getToken($user, $intoken)
     {
         // Build the request path.
-        $path = '?action=query&prop=info&intoken=' . $intoken . '&titles=User:' . $user;
+        $path = '?action=query&prop=info&intoken=' . $this->encodeParameter($intoken) . '&titles=User:' . $this->encodeParameter($user);
 
         // Send the request.
         $response = $this->client->post($this->fetchUrl($path), null);
