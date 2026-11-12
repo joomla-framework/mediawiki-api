@@ -142,18 +142,18 @@ class Users extends AbstractMediawikiObject
     /**
      * Method to get user contributions.
      *
-     * @param   string   $ucuser        The users to retrieve contributions for.
-     * @param   string   $ucuserprefix  Retrieve contributions for all users whose names begin with this value.
-     * @param   integer  $uclimit       The users to retrieve contributions for.
-     * @param   string   $ucstart       The start timestamp to return from.
-     * @param   string   $ucend         The end timestamp to return to.
-     * @param   boolean  $uccontinue    When more results are available, use this to continue.
-     * @param   string   $ucdir         In which direction to enumerate.
-     * @param   ?array   $ucnamespace   Only list contributions in these namespaces.
-     * @param   ?array   $ucprop        Include additional pieces of information.
-     * @param   ?array   $ucshow        Show only items that meet this criteria.
-     * @param   string   $uctag         Only list revisions tagged with this tag.
-     * @param   string   $uctoponly     Only list changes which are the latest revision
+     * @param   string          $ucuser        The users to retrieve contributions for.
+     * @param   string          $ucuserprefix  Retrieve contributions for all users whose names begin with this value.
+     * @param   integer         $uclimit       The users to retrieve contributions for.
+     * @param   string          $ucstart       The start timestamp to return from.
+     * @param   string          $ucend         The end timestamp to return to.
+     * @param   string|boolean  $uccontinue    The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $ucdir         In which direction to enumerate.
+     * @param   ?array          $ucnamespace   Only list contributions in these namespaces.
+     * @param   ?array          $ucprop        Include additional pieces of information.
+     * @param   ?array          $ucshow        Show only items that meet this criteria.
+     * @param   string          $uctag         Only list revisions tagged with this tag.
+     * @param   string          $uctoponly     Only list changes which are the latest revision
      *
      * @return  object
      *
@@ -197,7 +197,7 @@ class Users extends AbstractMediawikiObject
         }
 
         if ($uccontinue) {
-            $path .= '&uccontinue=';
+            $path .= '&uccontinue=' . $this->encodeContinuation($uccontinue);
         }
 
         if (isset($ucdir)) {

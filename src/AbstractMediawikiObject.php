@@ -74,6 +74,23 @@ abstract class AbstractMediawikiObject
     }
 
     /**
+     * Encode the value of a continuation parameter (`clcontinue`, `blcontinue`, …).
+     *
+     * `true`, which earlier versions expected, gives an empty value; any other value is the continuation
+     * value returned by the previous response.
+     *
+     * @param   array|string|int|bool  $value  The continuation value.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function encodeContinuation(array|string|int|bool $value): string
+    {
+        return $value === true ? '' : $this->encodeParameter($value);
+    }
+
+    /**
      * Encode a value for use in the query string of a request.
      *
      * Every value is percent-encoded (RFC 3986), so characters such as `&`, `#`, `=` or `+` in a title

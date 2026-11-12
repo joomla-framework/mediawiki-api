@@ -190,7 +190,7 @@ class LinksTest extends TestCase
     {
         $this->client->expects($this->once())
             ->method('get')
-            ->with('/api.php?action=query&list=alllinks&alcontinue=&format=xml')
+            ->with('/api.php?action=query&list=alllinks&alcontinue=Main%20Page&format=xml')
             ->willReturn($this->response);
 
         $this->assertThat(

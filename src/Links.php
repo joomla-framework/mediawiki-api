@@ -90,13 +90,13 @@ class Links extends AbstractMediawikiObject
     /**
      * Method to return all interwiki links from the given page(s).
      *
-     * @param   array    $titles      Page titles to retrieve links.
-     * @param   boolean  $iwurl       Whether to get the full url.
-     * @param   integer  $iwlimit     Number of interwiki links to return.
-     * @param   boolean  $iwcontinue  When more results are available, use this to continue.
-     * @param   string   $iwprefix    Prefix for the interwiki.
-     * @param   string   $iwtitle     Interwiki link to search for.
-     * @param   string   $iwdir       The direction in which to list.
+     * @param   array           $titles      Page titles to retrieve links.
+     * @param   boolean         $iwurl       Whether to get the full url.
+     * @param   integer         $iwlimit     Number of interwiki links to return.
+     * @param   string|boolean  $iwcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $iwprefix    Prefix for the interwiki.
+     * @param   string          $iwtitle     Interwiki link to search for.
+     * @param   string          $iwdir       The direction in which to list.
      *
      * @return  object
      *
@@ -119,7 +119,7 @@ class Links extends AbstractMediawikiObject
         }
 
         if ($iwcontinue) {
-            $path .= '&iwcontinue=';
+            $path .= '&iwcontinue=' . $this->encodeContinuation($iwcontinue);
         }
 
         if (isset($iwprefix)) {
@@ -143,13 +143,13 @@ class Links extends AbstractMediawikiObject
     /**
      * Method to return all interlanguage links from the given page(s).
      *
-     * @param   array    $titles      Page titles to retrieve links.
-     * @param   integer  $lllimit     Number of language links to return.
-     * @param   boolean  $llcontinue  When more results are available, use this to continue.
-     * @param   string   $llurl       Whether to get the full URL.
-     * @param   string   $lllang      Language code.
-     * @param   string   $lltitle     Link to search for.
-     * @param   string   $lldir       The direction in which to list.
+     * @param   array           $titles      Page titles to retrieve links.
+     * @param   integer         $lllimit     Number of language links to return.
+     * @param   string|boolean  $llcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $llurl       Whether to get the full URL.
+     * @param   string          $lllang      Language code.
+     * @param   string          $lltitle     Link to search for.
+     * @param   string          $lldir       The direction in which to list.
      *
      * @return  object
      *
@@ -168,7 +168,7 @@ class Links extends AbstractMediawikiObject
         }
 
         if ($llcontinue) {
-            $path .= '&llcontinue=';
+            $path .= '&llcontinue=' . $this->encodeContinuation($llcontinue);
         }
 
         if (isset($llurl)) {
@@ -239,14 +239,14 @@ class Links extends AbstractMediawikiObject
     /**
      * Method to enumerate all links that point to a given namespace.
      *
-     * @param   boolean  $alcontinue   When more results are available, use this to continue.
-     * @param   string   $alfrom       Start listing at this title. The title need not exist.
-     * @param   string   $alto         The page title to stop enumerating at.
-     * @param   string   $alprefix     Search for all page titles that begin with this value.
-     * @param   string   $alunique     Only show unique links.
-     * @param   ?array   $alprop       What pieces of information to include.
-     * @param   string   $alnamespace  The namespace to enumerate.
-     * @param   integer  $allimit      Number of links to return.
+     * @param   string|boolean  $alcontinue   The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $alfrom       Start listing at this title. The title need not exist.
+     * @param   string          $alto         The page title to stop enumerating at.
+     * @param   string          $alprefix     Search for all page titles that begin with this value.
+     * @param   string          $alunique     Only show unique links.
+     * @param   ?array          $alprop       What pieces of information to include.
+     * @param   string          $alnamespace  The namespace to enumerate.
+     * @param   integer         $allimit      Number of links to return.
      *
      * @return  object
      *
@@ -266,7 +266,7 @@ class Links extends AbstractMediawikiObject
         $path = '?action=query&list=alllinks';
 
         if ($alcontinue) {
-            $path .= '&alcontinue=';
+            $path .= '&alcontinue=' . $this->encodeContinuation($alcontinue);
         }
 
         if (isset($alfrom)) {

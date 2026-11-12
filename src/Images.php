@@ -19,11 +19,11 @@ class Images extends AbstractMediawikiObject
     /**
      * Method to get all images contained on the given page(s).
      *
-     * @param   array    $titles         Page titles to retrieve images.
-     * @param   integer  $imagelimit     How many images to return.
-     * @param   boolean  $imagecontinue  When more results are available, use this to continue.
-     * @param   integer  $imimages       Only list these images.
-     * @param   string   $imdir          The direction in which to list.
+     * @param   array           $titles         Page titles to retrieve images.
+     * @param   integer         $imagelimit     How many images to return.
+     * @param   string|boolean  $imagecontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   integer         $imimages       Only list these images.
+     * @param   string          $imdir          The direction in which to list.
      *
      * @return  object
      *
@@ -42,7 +42,7 @@ class Images extends AbstractMediawikiObject
         }
 
         if ($imagecontinue) {
-            $path .= '&imcontinue=';
+            $path .= '&imcontinue=' . $this->encodeContinuation($imagecontinue);
         }
 
         if (isset($imimages)) {
@@ -85,16 +85,16 @@ class Images extends AbstractMediawikiObject
     /**
      * Method to get all image information and upload history.
      *
-     * @param   ?array    $liprop             What image information to get.
-     * @param   integer   $lilimit            How many image revisions to return.
-     * @param   string    $listart            Timestamp to start listing from.
-     * @param   string    $liend              Timestamp to stop listing at.
-     * @param   integer   $liurlwidth         URL to an image scaled to this width will be returned..
-     * @param   integer   $liurlheight        URL to an image scaled to this height will be returned.
-     * @param   string    $limetadataversion  Version of metadata to use.
-     * @param   string    $liurlparam         A handler specific parameter string.
-     * @param   boolean   $licontinue         When more results are available, use this to continue.
-     * @param   ?array    $titles             The files to get information for, with the `File:` prefix.
+     * @param   ?array          $liprop             What image information to get.
+     * @param   integer         $lilimit            How many image revisions to return.
+     * @param   string          $listart            Timestamp to start listing from.
+     * @param   string          $liend              Timestamp to stop listing at.
+     * @param   integer         $liurlwidth         URL to an image scaled to this width will be returned..
+     * @param   integer         $liurlheight        URL to an image scaled to this height will be returned.
+     * @param   string          $limetadataversion  Version of metadata to use.
+     * @param   string          $liurlparam         A handler specific parameter string.
+     * @param   string|boolean  $licontinue         The continuation value from the previous response; `true` sends an empty value.
+     * @param   ?array          $titles             The files to get information for, with the `File:` prefix.
      *
      * @return  object
      *
@@ -152,7 +152,7 @@ class Images extends AbstractMediawikiObject
         }
 
         if ($licontinue) {
-            $path .= '&iicontinue=';
+            $path .= '&iicontinue=' . $this->encodeContinuation($licontinue);
         }
 
         // Send the request.

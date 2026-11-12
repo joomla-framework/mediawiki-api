@@ -19,13 +19,13 @@ class Categories extends AbstractMediawikiObject
     /**
      * Method to list all categories the page(s) belong to.
      *
-     * @param   array     $titles        Page titles to retrieve categories.
-     * @param   ?array    $clprop        List of additional properties to get.
-     * @param   ?array    $clshow        Type of categories to show.
-     * @param   ?integer  $cllimit       Number of categories to return.
-     * @param   boolean   $clcontinue    Continue when more results are available.
-     * @param   ?array    $clcategories  Only list these categories.
-     * @param   ?string   $cldir         Direction of listing.
+     * @param   array           $titles        Page titles to retrieve categories.
+     * @param   ?array          $clprop        List of additional properties to get.
+     * @param   ?array          $clshow        Type of categories to show.
+     * @param   ?integer        $cllimit       Number of categories to return.
+     * @param   string|boolean  $clcontinue    The continuation value from the previous response; `true` sends an empty value.
+     * @param   ?array          $clcategories  Only list these categories.
+     * @param   ?string         $cldir         Direction of listing.
      *
      * @return  object
      *
@@ -59,7 +59,7 @@ class Categories extends AbstractMediawikiObject
         }
 
         if ($clcontinue) {
-            $path .= '&clcontinue=';
+            $path .= '&clcontinue=' . $this->encodeContinuation($clcontinue);
         }
 
         if (isset($clcategories)) {
@@ -102,8 +102,8 @@ class Categories extends AbstractMediawikiObject
     /**
      * Method to get information about the given categories.
      *
-     * @param   array    $titles      Page titles to retrieve categories.
-     * @param   boolean  $clcontinue  Continue when more results are available.
+     * @param   array           $titles      Page titles to retrieve categories.
+     * @param   string|boolean  $clcontinue  The continuation value from the previous response; `true` sends an empty value.
      *
      * @return  object
      *
@@ -118,7 +118,7 @@ class Categories extends AbstractMediawikiObject
         $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($clcontinue) {
-            $path .= '&cicontinue=';
+            $path .= '&cicontinue=' . $this->encodeContinuation($clcontinue);
         }
 
         // Send the request.

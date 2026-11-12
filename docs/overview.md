@@ -122,9 +122,26 @@ yourself when the values are not guaranteed to be non-empty.
 `action=clientlogin` and bot passwords. It still works for bot passwords in the `User@BotName`
 form, but not for normal accounts on a current wiki.
 
-**No `maxlag`, no rate limiting, no continuation.** The client sends no `maxlag` parameter — which
-the Wikimedia projects expect from automated clients — has no backoff, and does not follow the
-`continue` token, so paginated queries have to be looped by the caller.
+**No `maxlag`, no rate limiting.** The client sends no `maxlag` parameter — which the Wikimedia
+projects expect from automated clients — and has no backoff.
+
+**Paging is up to the caller.** The client does not follow continuations itself. To fetch the next
+batch, pass the value from the `continue` element of the previous response as the method's
+`*continue` argument:
+
+```php
+$result = $mediawiki->categories->getCategories(['Main Page']);
+
+while (isset($result->continue['clcontinue'])) {
+    $result = $mediawiki->categories->getCategories(
+        ['Main Page'],
+        clcontinue: (string) $result->continue['clcontinue']
+    );
+}
+```
+
+Passing `true`, as earlier versions expected, sends the parameter without a value, which does not
+continue anything.
 
 **Errors are all `DomainException`.** The MediaWiki error code (`badtoken`, `ratelimited`,
 `permissiondenied`, `readonly`) is not preserved in a form you can branch on; only the message text

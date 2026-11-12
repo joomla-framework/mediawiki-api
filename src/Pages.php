@@ -365,7 +365,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if ($incontinue) {
-            $path .= '&incontinue=';
+            $path .= '&incontinue=' . $this->encodeContinuation($incontinue);
         }
 
         // Send the request.
@@ -377,9 +377,9 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get various properties defined in the page content.
      *
-     * @param   array    $titles      Page titles to retrieve properties.
-     * @param   boolean  $ppcontinue  When more results are available, use this to continue.
-     * @param   string   $ppprop      Page prop to look on the page for.
+     * @param   array           $titles      Page titles to retrieve properties.
+     * @param   string|boolean  $ppcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $ppprop      Page prop to look on the page for.
      *
      * @return  object
      *
@@ -394,7 +394,7 @@ class Pages extends AbstractMediawikiObject
         $path .= '&titles=' . $this->encodeParameter($titles);
 
         if ($ppcontinue) {
-            $path .= '&ppcontinue=';
+            $path .= '&ppcontinue=' . $this->encodeContinuation($ppcontinue);
         }
 
         if (isset($ppprop)) {
@@ -448,12 +448,12 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all page templates from the given page.
      *
-     * @param   array    $titles       Page titles to retrieve templates.
-     * @param   ?array   $tlnamespace  Show templates in this namespace(s) only.
-     * @param   integer  $tllimit      How many templates to return.
-     * @param   boolean  $tlcontinue   When more results are available, use this to continue.
-     * @param   string   $tltemplates  Only list these templates.
-     * @param   string   $tldir        The direction in which to list.
+     * @param   array           $titles       Page titles to retrieve templates.
+     * @param   ?array          $tlnamespace  Show templates in this namespace(s) only.
+     * @param   integer         $tllimit      How many templates to return.
+     * @param   string|boolean  $tlcontinue   The continuation value from the previous response; `true` sends an empty value.
+     * @param   string          $tltemplates  Only list these templates.
+     * @param   string          $tldir        The direction in which to list.
      *
      * @return  object
      *
@@ -482,7 +482,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if ($tlcontinue) {
-            $path .= '&tlcontinue=';
+            $path .= '&tlcontinue=' . $this->encodeContinuation($tlcontinue);
         }
 
         if (isset($tltemplates)) {
@@ -502,13 +502,13 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all pages that link to the given page.
      *
-     * @param   string   $bltitle           Title to search.
-     * @param   integer  $blpageid          Pageid to search.
-     * @param   boolean  $blcontinue        When more results are available, use this to continue.
-     * @param   ?array   $blnamespace       The namespace to enumerate.
-     * @param   string   $blfilterredirect  How to filter for redirects..
-     * @param   integer  $bllimit           How many total pages to return.
-     * @param   boolean  $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
+     * @param   string          $bltitle           Title to search.
+     * @param   integer         $blpageid          Pageid to search.
+     * @param   string|boolean  $blcontinue        The continuation value from the previous response; `true` sends an empty value.
+     * @param   ?array          $blnamespace       The namespace to enumerate.
+     * @param   string          $blfilterredirect  How to filter for redirects..
+     * @param   integer         $bllimit           How many total pages to return.
+     * @param   boolean         $blredirect        If linking page is a redirect, find all pages that link to that redirect as well.
      *
      * @return  object
      *
@@ -533,7 +533,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if ($blcontinue) {
-            $path .= '&blcontinue=';
+            $path .= '&blcontinue=' . $this->encodeContinuation($blcontinue);
         }
 
         if (isset($blnamespace)) {
@@ -561,11 +561,11 @@ class Pages extends AbstractMediawikiObject
     /**
      * Method to get all pages that link to the given interwiki link.
      *
-     * @param   string   $iwbltitle     Interwiki link to search for. Must be used with iwblprefix.
-     * @param   string   $iwblprefix    Prefix for the interwiki.
-     * @param   boolean  $iwblcontinue  When more results are available, use this to continue.
-     * @param   integer  $iwbllimit     How many total pages to return.
-     * @param   ?array   $iwblprop      Which properties to get.
+     * @param   string          $iwbltitle     Interwiki link to search for. Must be used with iwblprefix.
+     * @param   string          $iwblprefix    Prefix for the interwiki.
+     * @param   string|boolean  $iwblcontinue  The continuation value from the previous response; `true` sends an empty value.
+     * @param   integer         $iwbllimit     How many total pages to return.
+     * @param   ?array          $iwblprop      Which properties to get.
      *
      * @return  object
      *
@@ -583,7 +583,7 @@ class Pages extends AbstractMediawikiObject
         }
 
         if ($iwblcontinue) {
-            $path .= '&iwblcontinue=';
+            $path .= '&iwblcontinue=' . $this->encodeContinuation($iwblcontinue);
         }
 
         if (isset($iwbllimit)) {
