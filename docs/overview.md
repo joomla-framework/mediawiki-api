@@ -8,6 +8,9 @@ reachable from one entry point.
 composer require joomla/mediawiki
 ```
 
+The package needs PHP 8.3 or later and the SimpleXML extension (`ext-simplexml`), which parses the
+API responses.
+
 ## Getting started
 
 ```php

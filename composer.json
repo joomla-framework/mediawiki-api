@@ -11,12 +11,12 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^8.3.0",
+        "ext-simplexml": "*",
         "joomla/http": "^4.0",
         "joomla/registry": "^4.0",
         "joomla/uri": "^4.0"
     },
     "require-dev": {
-        "ext-simplexml": "*",
         "joomla/test": "^4.0",
         "phpunit/phpunit": "^12.2.6",
         "squizlabs/php_codesniffer": "^4.0",
@@ -33,5 +33,6 @@
             "Joomla\\Mediawiki\\Tests\\": "Tests/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
