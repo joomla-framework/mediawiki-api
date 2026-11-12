@@ -84,17 +84,7 @@ abstract class AbstractMediawikiObject
      */
     public function buildParameter(array $params)
     {
-        $path = '';
-
-        foreach ($params as $param) {
-            $path .= $param;
-
-            if (next($params) == true) {
-                $path .= '|';
-            }
-        }
-
-        return $path;
+        return implode('|', $params);
     }
 
     /**
